@@ -1,0 +1,35 @@
+name: fuutou_chokin
+description: "封筒貯金・袋分け貯金：給料日に袋分けして、残りは繰り越しか貯金へ。広告つき無料のiPhoneアプリ。"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.13.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  app_tracking_transparency: ^2.0.7
+  google_mobile_ads: ^9.1.0
+  intl: ^0.20.3
+  shared_preferences: ^2.5.6
+  url_launcher: ^6.3.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/licenses/
+
+  fonts:
+    - family: KiwiMaru
+      fonts:
+        - asset: assets/fonts/KiwiMaru-Medium.ttf

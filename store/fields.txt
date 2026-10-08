@@ -1,0 +1,102 @@
+APP NAME (30)
+封筒貯金 袋分け貯金
+
+HOME SCREEN NAME (CFBundleDisplayName)
+封筒貯金
+
+SUBTITLE (30)
+袋分け家計簿・給料日に繰越か貯金へ
+
+BUNDLE ID
+jp.fuutouchokin.app
+
+SKU
+fuutouchokin-ios-1
+
+CATEGORY
+Primary: ファイナンス (Finance) / Secondary: ライフスタイル (Lifestyle, optional)
+
+AGE RATING
+4+（すべて「なし」。広告は表示するが、年齢制限の質問に該当する内容なし）
+
+AVAILABILITY / PRICE
+Japan only / Free（アプリ内課金・サブスクリプションなし）
+
+KEYWORDS (100) — 92 chars
+家計簿,予算管理,やりくり,節約,封筒,袋わけ,ふくろ分け,先取り貯金,給料日,繰越,持ち越し,食費,日用品,外食,生活費,現金,月予算,1日予算,残り,支出記録,貯金箱,費目,貯金額
+
+PROMOTIONAL TEXT (170)
+給料日にお金を封筒へ分けて、その中だけでやりくり。封筒をタップして金額を入れるだけで、袋ごとの残りがひと目でわかります。給料日には残りを繰り越すか貯金へ移せて、貯金の合計がどんどん増えていきます。
+
+DESCRIPTION
+description.txt（末尾にプライバシーポリシーの行。サブスクがないので EULA 行は不要）
+
+SUPPORT URL
+https://cedric1963y-lab.github.io/fuutou-chokin/
+
+MARKETING URL
+https://cedric1963y-lab.github.io/
+（開発者サイトのルート。AdMob の app-ads.txt https://cedric1963y-lab.github.io/app-ads.txt と同じドメイン。pub-5342568663681412）
+
+PRIVACY POLICY URL
+https://cedric1963y-lab.github.io/fuutou-chokin/privacy.html
+
+TERMS
+https://cedric1963y-lab.github.io/fuutou-chokin/terms.html（アプリ内「設定」→「利用規約」）
+
+COPYRIGHT
+2026 Hayato Suzuki
+
+VERSION / BUILD
+1.0.0 (1)
+
+CONTENT RIGHTS
+Does not contain, show, or access third-party content（第三者のコンテンツなし）。フォント Kiwi Maru は SIL OFL 1.1（アプリ内「設定」→「ライセンス」）。広告は Google AdMob
+
+ADVERTISING (Connect の「広告」申告)
+Yes — このアプリは広告を表示します（Google AdMob）
+
+EXPORT COMPLIANCE
+ITSAppUsesNonExemptEncryption = false（暗号化なし）
+
+APP PRIVACY（Connect の「App のプライバシー」回答）
+Data collection: Yes（第三者 SDK = Google Mobile Ads / UMP が収集。開発者自身は収集しない）
+Tracking: Yes（ATT で許可された場合、広告識別子を第三者広告に使用）
+
+| データタイプ | 用途 | ユーザーにリンク | トラッキング |
+| 識別子 > デバイスID | 第三者広告、アナリティクス | はい | はい |
+| 使用状況データ > 広告データ | 第三者広告 | はい | はい |
+| 使用状況データ > 製品の操作 | 第三者広告、アナリティクス | いいえ | いいえ |
+| 位置情報 > おおよその場所 | 第三者広告（SDK が IP から推定） | いいえ | いいえ |
+| 診断 > クラッシュデータ | アプリの機能 | いいえ | いいえ |
+| 診断 > パフォーマンスデータ | アナリティクス、第三者広告 | いいえ | いいえ |
+
+収集しない: 連絡先情報、健康とフィットネス、財務情報（家計の記録は端末内のみ・送信なし）、正確な位置情報、機密情報、連絡先、ユーザーコンテンツ、閲覧履歴、検索履歴、購入、その他のデータ
+（仕事の証拠帳 docs/appstore/ja.md の AdMob 回答＝Google「App store data disclosure」2026-10-02 版に合わせた。アーカイブ後に Xcode の Privacy Report で SDK 宣言とずれがないか確認）
+
+APP REVIEW NOTES
+アカウント登録・ログインはありません。家計の記録（封筒・支出・貯金）は端末内（UserDefaults）にのみ保存し、サーバー通信はありません。アプリ内課金・サブスクリプションはありません。
+
+広告: Google AdMob のバナー（封筒／貯金と履歴／設定の各画面の下部）と、インタースティシャル（給料日の締めのあと、袋の編集画面を閉じたとき。4分以上の間隔をあけ、起動後60秒以内は表示しない）を使います。支出の入力中には全画面広告を出しません。起動直後に、必要な地域では Google UMP の同意フォーム、続いて App Tracking Transparency の許可ダイアログを表示します。許可しなくてもすべての機能が使えます（非パーソナライズ広告になります）。
+
+確認手順の例:
+1. 初回起動で給料日（例: 毎月25日）と使う封筒を選び「袋分けをはじめる」
+2. 「食費」の封筒をタップ → 金額を入力 →「食費から出す」。封筒の「のこり」が減ります
+3. 給料日の締めは、給料日当日に案内が出ます。審査時にすぐ確認する場合は「設定」→「今日で締める」で、封筒ごとに「繰り越す」「貯金へ」を選んで「袋分けして新しい期間へ」
+4. 「貯金と履歴」タブで貯金の合計と締めた期間の結果を確認できます
+
+カメラ・写真・位置情報・連絡先などの権限は使いません（ATT のみ）。
+
+SCREENSHOTS (iPhone 6.1"/Dynamic Island medium, 1179x2556, raw simctl)
+01-envelopes.png 封筒の一覧（給料日まであと4日・袋ごとの残り）
+02-spend.png     支出の記録（テンキー）
+03-payday.png    給料日の袋分け（繰り越す／貯金へ）
+04-history.png   貯金の合計と履歴
+広告は写っていない（撮影モードは広告SDKを起動しない）。価格の文字なし。
+
+ADMOB
+App ID: ca-app-pub-5342568663681412~2258671636
+Banner: ca-app-pub-5342568663681412/9308215586
+Interstitial: ca-app-pub-5342568663681412/2555194263
+（release ビルドのみ。debug/profile は Google 公式テスト ID）
+app-ads.txt: https://cedric1963y-lab.github.io/app-ads.txt
