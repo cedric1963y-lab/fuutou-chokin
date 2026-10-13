@@ -43,16 +43,18 @@ class AdService extends ChangeNotifier {
     if (!_platformOk || _starting) return;
     _starting = true;
     await _consent();
-    await _tracking();
     await _readPersonalization();
     try {
       await MobileAds.instance.initialize();
     } catch (e) {
       debugPrint('AdMob initialize failed: $e');
     }
+    // ATT の回答を待たずにバナーを読み込む（未回答・拒否は非パーソナライズ）。
     _ready = true;
     notifyListeners();
     _loadInterstitial();
+    await _tracking();
+    await _readPersonalization();
   }
 
   AdRequest request() => AdRequest(nonPersonalizedAds: !_personalized);
