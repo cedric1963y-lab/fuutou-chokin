@@ -29,6 +29,20 @@ class AdService extends ChangeNotifier {
   InterstitialAd? _interstitial;
   final DateTime _sessionStart = DateTime.now();
 
+  bool _adFree = false;
+
+  /// プレミアム購入済みなら true。バナーも全画面広告も出さない。
+  bool get adFree => _adFree;
+  set adFree(bool v) {
+    if (_adFree == v) return;
+    _adFree = v;
+    if (v) {
+      _interstitial?.dispose();
+      _interstitial = null;
+    }
+    notifyListeners();
+  }
+
   bool get ready => _ready;
   bool get privacyOptionsRequired => _privacyOptionsRequired;
 
@@ -129,7 +143,7 @@ class AdService extends ChangeNotifier {
   }
 
   void _loadInterstitial() {
-    if (!_ready || _interstitial != null) return;
+    if (!_ready || _adFree || _interstitial != null) return;
     InterstitialAd.load(
       adUnitId: AdIds.interstitial,
       request: request(),
@@ -145,7 +159,7 @@ class AdService extends ChangeNotifier {
 
   /// ひと区切りついたときに呼ぶ。間隔があいていて、読み込み済みのときだけ表示。
   Future<void> maybeShowInterstitial() async {
-    if (!_ready) return;
+    if (!_ready || _adFree) return;
     final ad = _interstitial;
     if (ad == null) {
       _loadInterstitial();

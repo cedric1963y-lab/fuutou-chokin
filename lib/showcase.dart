@@ -1,17 +1,23 @@
+import 'domain/goals.dart';
 import 'domain/ledger.dart';
 import 'domain/payday.dart';
 import 'persistence/ledger_repository.dart';
+import 'premium/premium_store.dart';
 import 'state/ledger_controller.dart';
 
 /// ストア用スクリーンショットの撮影モード（debug ビルドのみ。main.dart 参照）。
 /// 見本のデータを端末に保存せずメモリだけで使い、広告 SDK には触れない。
 class Showcase {
-  Showcase._(this.scene, this.controller, this.startTab, this.paydayChoices);
+  Showcase._(this.scene, this.controller, this.startTab, this.paydayChoices, {bool premium = false})
+      : premium = PremiumStore(enabled: false, unlocked: premium);
 
   final String scene;
   final LedgerController controller;
   final int startTab;
   final Map<String, Leftover>? paydayChoices;
+
+  /// 撮影用（StoreKit には触れない）
+  final PremiumStore premium;
 
   static Showcase build(String scene) {
     switch (scene) {
@@ -27,6 +33,15 @@ class Showcase {
         });
       case 'history':
         return Showcase._(scene, _controller(_afterPayday(), DateTime(2026, 10, 26)), 1, null);
+      case 'premium':
+        // プレミアムの案内（購入前）
+        return Showcase._(scene, _controller(_afterPayday(), DateTime(2026, 10, 26)), 1, null);
+      case 'goals':
+        return Showcase._(scene, _controller(_withGoals(_afterPayday()), DateTime(2026, 10, 26)), 1, null,
+            premium: true);
+      case 'trend':
+        return Showcase._(scene, _controller(_withGoals(_afterPayday()), DateTime(2026, 10, 26)), 1, null,
+            premium: true);
       case 'spend':
         return Showcase._(scene, _controller(_current(), DateTime(2026, 10, 19)), 0, null);
       default:
@@ -135,6 +150,15 @@ class Showcase {
         rule: _rule,
         history: _history(),
       );
+
+  static Ledger _withGoals(Ledger l) {
+    l.goals.addAll([
+      SavingsGoal(id: 'g1', name: '夏の家族旅行', target: 100000, memo: '来年の8月まで'),
+      SavingsGoal(id: 'g2', name: '車検', target: 80000),
+      SavingsGoal(id: 'g3', name: '新しい冷蔵庫', target: 120000),
+    ]);
+    return l;
+  }
 
   /// 10/23 に締めたあと（10/26 時点）。
   static Ledger _afterPayday() {

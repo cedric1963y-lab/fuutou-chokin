@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'look/kraft_theme.dart';
 import 'monetization/ad_service.dart';
+import 'premium/premium_store.dart';
 import 'screens/home_shell.dart';
 import 'screens/welcome_screen.dart';
 import 'showcase.dart';
@@ -14,12 +15,14 @@ class AppScope extends InheritedWidget {
     super.key,
     required this.controller,
     required this.ads,
+    required this.premium,
     this.showcase,
     required super.child,
   });
 
   final LedgerController controller;
   final AdService ads;
+  final PremiumStore premium;
   final Showcase? showcase;
 
   static AppScope of(BuildContext context) =>
@@ -27,7 +30,7 @@ class AppScope extends InheritedWidget {
 
   @override
   bool updateShouldNotify(AppScope old) =>
-      old.controller != controller || old.ads != ads;
+      old.controller != controller || old.ads != ads || old.premium != premium;
 }
 
 class FuutouApp extends StatelessWidget {
@@ -35,11 +38,13 @@ class FuutouApp extends StatelessWidget {
     super.key,
     required this.controller,
     required this.ads,
+    required this.premium,
     this.showcase,
   });
 
   final LedgerController controller;
   final AdService ads;
+  final PremiumStore premium;
   final Showcase? showcase;
 
   @override
@@ -47,6 +52,7 @@ class FuutouApp extends StatelessWidget {
     return AppScope(
       controller: controller,
       ads: ads,
+      premium: premium,
       showcase: showcase,
       child: MaterialApp(
         title: '封筒貯金',

@@ -6,7 +6,11 @@ import '../domain/yen.dart';
 import '../look/coin_badge.dart';
 import '../look/envelope_card.dart';
 import '../look/kraft_theme.dart';
+import '../premium/csv_share.dart';
+import '../premium/premium_screen.dart';
+import 'goals_screen.dart';
 import 'spend_sheet.dart';
+import 'trend_screen.dart';
 
 /// 貯金の合計と、期間ごとの履歴。
 class HistoryScreen extends StatelessWidget {
@@ -31,6 +35,8 @@ class HistoryScreen extends StatelessWidget {
                     style: TextStyle(fontFamily: Kraft.display, fontSize: 26)),
               ),
               _SavedTotal(ledger: l),
+              const SizedBox(height: 12),
+              const _PremiumTools(),
               const SizedBox(height: 18),
               _SectionTitle(
                 '今の期間 ${md(l.periodStart)}〜${md(l.periodEnd)}',
@@ -112,9 +118,10 @@ class _SavedTotal extends StatelessWidget {
 }
 
 class _SectionTitle extends StatelessWidget {
-  const _SectionTitle(this.text, {this.trailing});
+  const _SectionTitle(this.text, {this.trailing, this.action});
   final String text;
   final String? trailing;
+  final Widget? action;
 
   @override
   Widget build(BuildContext context) {
@@ -128,6 +135,7 @@ class _SectionTitle extends StatelessWidget {
           ),
           if (trailing != null)
             Text(trailing!, style: const TextStyle(fontSize: 13, color: Kraft.inkSoft)),
+          ?action,
         ],
       ),
     );
@@ -223,4 +231,127 @@ class _ClosedCard extends StatelessWidget {
         Leftover.carry => left == 0 ? '' : '繰越',
         Leftover.clear => '0に',
       };
+}
+
+/// 貯金の目標・グラフ・CSV（プレミアム）。買う前はやわらかい案内だけを出す。
+class _PremiumTools extends StatelessWidget {
+  const _PremiumTools();
+
+  @override
+  Widget build(BuildContext context) {
+    final scope = AppScope.of(context);
+    final c = scope.controller;
+    return ListenableBuilder(
+      listenable: scope.premium,
+      builder: (context, _) {
+        final unlocked = scope.premium.unlocked;
+        final goals = unlocked ? c.goalProgress : const [];
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (unlocked) ...[
+              _SectionTitle('貯金の目標',
+                  action: TextButton(
+                    onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute<void>(builder: (_) => const GoalsScreen())),
+                    child: Text(goals.isEmpty ? '追加' : '編集'),
+                  )),
+              if (goals.isEmpty)
+                Card(
+                  margin: EdgeInsets.zero,
+                  child: ListTile(
+                    leading: const Icon(Icons.flag_outlined),
+                    title: const Text('目標を決める', style: TextStyle(fontWeight: FontWeight.w800)),
+                    subtitle: const Text('例: 旅行 10万円 → 「あと◯円」がわかります'),
+                    trailing: const Icon(Icons.add),
+                    onTap: () => showGoalForm(context),
+                  ),
+                )
+              else
+                for (final p in goals)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: GoalTile(progress: p, onTap: () => showGoalForm(context, goal: p.goal)),
+                  ),
+            ] else
+              const LockedTeaser(
+                icon: Icons.flag_outlined,
+                title: '貯金の目標',
+                body: '「旅行 10万円まで あと◯円」を表示できます',
+              ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: _ToolButton(
+                    icon: Icons.bar_chart_rounded,
+                    label: '月ごとのグラフ',
+                    locked: !unlocked,
+                    onTap: () => unlocked
+                        ? Navigator.of(context).push(
+                            MaterialPageRoute<void>(builder: (_) => const TrendScreen()))
+                        : openPremium(context),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Builder(
+                    builder: (btnContext) => _ToolButton(
+                      icon: Icons.ios_share,
+                      label: 'CSV書き出し',
+                      locked: !unlocked,
+                      onTap: () =>
+                          unlocked ? shareCsv(btnContext, c.ledger) : openPremium(context),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _ToolButton extends StatelessWidget {
+  const _ToolButton({required this.icon, required this.label, required this.locked, required this.onTap});
+  final IconData icon;
+  final String label;
+  final bool locked;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.zero,
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 20, color: locked ? Kraft.inkSoft : Kraft.ink),
+              const SizedBox(width: 6),
+              Flexible(
+                child: Text(label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 13.5,
+                        color: locked ? Kraft.inkSoft : Kraft.ink)),
+              ),
+              if (locked) ...[
+                const SizedBox(width: 4),
+                const Icon(Icons.lock_outline, size: 15, color: Kraft.coinDeep),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

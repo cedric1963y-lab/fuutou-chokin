@@ -29,6 +29,7 @@ Future<void> openSpendSheet(
     builder: (_) => AppScope(
       controller: scope.controller,
       ads: scope.ads,
+      premium: scope.premium,
       showcase: scope.showcase,
       child: _SpendSheet(
         envelopeId: editing?.envelopeId ?? envelopeId,

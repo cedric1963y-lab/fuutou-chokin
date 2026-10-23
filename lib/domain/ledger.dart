@@ -1,3 +1,4 @@
+import 'goals.dart';
 import 'payday.dart';
 import 'yen.dart';
 
@@ -190,7 +191,8 @@ class Ledger {
     required this.rule,
     required this.history,
     this.setupDone = true,
-  });
+    List<SavingsGoal>? goals,
+  }) : goals = goals ?? [];
 
   final List<Envelope> envelopes;
 
@@ -202,6 +204,9 @@ class Ledger {
   /// 締めた期（新しい順）
   final List<ClosedPeriod> history;
   bool setupDone;
+
+  /// 貯金の目標（プレミアム）。上から順に貯金の合計をあてる。
+  final List<SavingsGoal> goals;
 
   Envelope get savings => envelopes.firstWhere((e) => e.isSavings);
 
@@ -337,6 +342,7 @@ class Ledger {
         'rule': rule.toJson(),
         'history': history.map((h) => h.toJson()).toList(),
         'setup': setupDone,
+        'goals': goals.map((g) => g.toJson()).toList(),
       };
 
   static Ledger fromJson(Map<String, dynamic> j) {
@@ -353,6 +359,9 @@ class Ledger {
           .map((e) => ClosedPeriod.fromJson(e as Map<String, dynamic>))
           .toList(),
       setupDone: j['setup'] as bool? ?? true,
+      goals: ((j['goals'] as List?) ?? const [])
+          .map((e) => SavingsGoal.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
     ledger.ensureSavings();
     return ledger;

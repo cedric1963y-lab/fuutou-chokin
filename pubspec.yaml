@@ -1,8 +1,8 @@
 name: fuutou_chokin
-description: "封筒貯金・袋分け貯金：給料日に袋分けして、残りは繰り越しか貯金へ。広告つき無料のiPhoneアプリ。"
+description: "封筒貯金・袋分け貯金：給料日に袋分けして、残りは繰り越しか貯金へ。広告つき無料＋買い切りプレミアムのiPhoneアプリ。"
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.1.0+2
 
 environment:
   sdk: ^3.13.4
@@ -17,6 +17,9 @@ dependencies:
   intl: ^0.20.3
   shared_preferences: ^2.5.6
   url_launcher: ^6.3.3
+  in_app_purchase: ^3.3.1
+  share_plus: ^13.3.1
+  path_provider: ^2.1.6
 
 dev_dependencies:
   flutter_test:

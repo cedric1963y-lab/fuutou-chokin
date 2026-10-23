@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 
+import '../domain/goals.dart';
 import '../domain/ledger.dart';
 import '../domain/payday.dart';
 import '../domain/yen.dart';
@@ -181,6 +182,36 @@ class LedgerController extends ChangeNotifier {
     final closed = ledger.closePeriod(choices, nextPeriodStart(early: early));
     await _commit();
     return closed;
+  }
+
+  // ---- 貯金の目標（プレミアム） ----
+
+  List<GoalProgress> get goalProgress => fillGoals(ledger.goals, ledger.totalSaved);
+
+  Future<SavingsGoal> addGoal({required String name, required int target, String memo = ''}) async {
+    final g = SavingsGoal(id: 'g${_newId()}', name: name.trim(), target: target, memo: memo.trim());
+    ledger.goals.add(g);
+    await _commit();
+    return g;
+  }
+
+  Future<void> updateGoal(SavingsGoal g, {String? name, int? target, String? memo}) async {
+    if (name != null && name.trim().isNotEmpty) g.name = name.trim();
+    if (target != null) g.target = target;
+    if (memo != null) g.memo = memo.trim();
+    await _commit();
+  }
+
+  Future<void> removeGoal(SavingsGoal g) async {
+    ledger.goals.removeWhere((x) => x.id == g.id);
+    await _commit();
+  }
+
+  Future<void> moveGoal(int oldIndex, int newIndex) async {
+    final list = ledger.goals;
+    final g = list.removeAt(oldIndex);
+    list.insert(newIndex.clamp(0, list.length), g);
+    await _commit();
   }
 
   Future<void> wipeAll() async {

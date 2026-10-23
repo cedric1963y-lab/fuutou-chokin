@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'app.dart';
 import 'monetization/ad_service.dart';
 import 'persistence/ledger_repository.dart';
+import 'premium/premium_store.dart';
 import 'showcase.dart';
 import 'state/ledger_controller.dart';
 
@@ -23,6 +24,7 @@ void main() {
     runApp(FuutouApp(
       controller: show.controller,
       ads: AdService(enabled: false),
+      premium: show.premium,
       showcase: show,
     ));
     return;
@@ -30,7 +32,11 @@ void main() {
 
   final controller = LedgerController(PrefsLedgerRepository());
   final ads = AdService();
-  runApp(FuutouApp(controller: controller, ads: ads));
+  final premium = PremiumStore();
+  // プレミアム（広告なし）ならバナーも全画面広告も止める
+  premium.addListener(() => ads.adFree = premium.unlocked);
+  runApp(FuutouApp(controller: controller, ads: ads, premium: premium));
   controller.load();
+  premium.start();
   WidgetsBinding.instance.addPostFrameCallback((_) => ads.start());
 }
