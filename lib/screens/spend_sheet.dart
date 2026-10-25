@@ -31,6 +31,7 @@ Future<void> openSpendSheet(
       ads: scope.ads,
       premium: scope.premium,
       showcase: scope.showcase,
+      rating: scope.rating,
       child: _SpendSheet(
         envelopeId: editing?.envelopeId ?? envelopeId,
         editing: editing,
@@ -59,6 +60,8 @@ Future<void> openSpendSheet(
         ? SnackBarAction(label: '取り消す', onPressed: () => c.removeSpend(s))
         : null,
   ));
+  // 新しく記録し終えたときだけ（修正・削除は数えない）。シートは閉じたあと。
+  if (editing == null) await scope.rating.afterSpendSaved(s.on);
 }
 
 class _SheetResult {

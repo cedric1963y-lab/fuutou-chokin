@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart' show AppLifecycleState, WidgetsBinding;
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,6 +28,7 @@ class AdService extends ChangeNotifier {
   bool _personalized = false;
   bool _privacyOptionsRequired = false;
   InterstitialAd? _interstitial;
+  bool _showing = false;
   final DateTime _sessionStart = DateTime.now();
 
   bool _adFree = false;
@@ -159,7 +161,10 @@ class AdService extends ChangeNotifier {
 
   /// ひと区切りついたときに呼ぶ。間隔があいていて、読み込み済みのときだけ表示。
   Future<void> maybeShowInterstitial() async {
-    if (!_ready || _adFree) return;
+    if (!_ready || _adFree || _showing) return;
+    // アプリが前面にいないとき（通知センター・別アプリ・ダイアログ表示中など）は出さない
+    final life = WidgetsBinding.instance.lifecycleState;
+    if (life != null && life != AppLifecycleState.resumed) return;
     final ad = _interstitial;
     if (ad == null) {
       _loadInterstitial();
@@ -175,16 +180,25 @@ class AdService extends ChangeNotifier {
     }
     _interstitial = null;
     ad.fullScreenContentCallback = FullScreenContentCallback(
+      onAdShowedFullScreenContent: (a) => _showing = true,
       onAdDismissedFullScreenContent: (a) {
+        _showing = false;
         a.dispose();
         _loadInterstitial();
       },
       onAdFailedToShowFullScreenContent: (a, err) {
+        _showing = false;
         a.dispose();
         _loadInterstitial();
       },
     );
     await prefs.setInt(_lastShownKey, now.millisecondsSinceEpoch);
-    await ad.show();
+    _showing = true;
+    try {
+      await ad.show();
+    } catch (e) {
+      _showing = false;
+      debugPrint('interstitial show failed: $e');
+    }
   }
 }

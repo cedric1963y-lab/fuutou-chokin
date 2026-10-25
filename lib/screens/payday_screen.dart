@@ -58,6 +58,9 @@ class _PaydayScreenState extends State<PaydayScreen> {
       ),
     );
     nav.pop();
+    // 2回目以降の締めで条件がそろえば評価のお願い（その回は全画面広告なし）
+    final asked = await scope.rating.afterPaydayClosed(c.ledger.history.length);
+    if (asked) return;
     // ひと区切りのあとにだけ、たまに全画面広告
     await scope.ads.maybeShowInterstitial();
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'feedback/rating_ask.dart';
 import 'look/kraft_theme.dart';
 import 'monetization/ad_service.dart';
 import 'premium/premium_store.dart';
@@ -17,6 +18,7 @@ class AppScope extends InheritedWidget {
     required this.ads,
     required this.premium,
     this.showcase,
+    this.rating = const RatingAsk(enabled: false),
     required super.child,
   });
 
@@ -24,6 +26,7 @@ class AppScope extends InheritedWidget {
   final AdService ads;
   final PremiumStore premium;
   final Showcase? showcase;
+  final RatingAsk rating;
 
   static AppScope of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<AppScope>()!;
@@ -40,12 +43,14 @@ class FuutouApp extends StatelessWidget {
     required this.ads,
     required this.premium,
     this.showcase,
+    this.rating = const RatingAsk(enabled: false),
   });
 
   final LedgerController controller;
   final AdService ads;
   final PremiumStore premium;
   final Showcase? showcase;
+  final RatingAsk rating;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +59,7 @@ class FuutouApp extends StatelessWidget {
       ads: ads,
       premium: premium,
       showcase: showcase,
+      rating: rating,
       child: MaterialApp(
         title: '封筒貯金',
         debugShowCheckedModeBanner: false,

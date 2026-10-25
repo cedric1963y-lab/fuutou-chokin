@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'app.dart';
+import 'feedback/rating_ask.dart';
 import 'monetization/ad_service.dart';
 import 'persistence/ledger_repository.dart';
 import 'premium/premium_store.dart';
@@ -35,7 +36,9 @@ void main() {
   final premium = PremiumStore();
   // プレミアム（広告なし）ならバナーも全画面広告も止める
   premium.addListener(() => ads.adFree = premium.unlocked);
-  runApp(FuutouApp(controller: controller, ads: ads, premium: premium));
+  const rating = RatingAsk();
+  runApp(FuutouApp(controller: controller, ads: ads, premium: premium, rating: rating));
+  rating.noteLaunch();
   controller.load();
   premium.start();
   WidgetsBinding.instance.addPostFrameCallback((_) => ads.start());
