@@ -8,8 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
+		1C2B9D1D7CC01C2570787C23 /* AppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CCC897639577A8CA9115E03 /* AppIntent.swift */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
+		47D6C9D92612518485414FDE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 975A5FDDF8F12AF3AE0DBB47 /* Foundation.framework */; };
+		6A81A1E1EC882880C95C772A /* FuutouWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135B48BF78E802A59E1CC10B /* FuutouWidget.swift */; };
 		6C9894F3B6B3F48DD4EDC20B /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02BAA2CFB6DA8387891C01F1 /* Pods_Runner.framework */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		7884E8682EC3CC0700C636F2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7884E8672EC3CC0400C636F2 /* SceneDelegate.swift */; };
@@ -17,6 +20,9 @@
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		9C466203ABC586924BE015FF /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6048F71FAE4A2B4BE2EC2D7 /* Pods_RunnerTests.framework */; };
+		A4029F9C5581A4983881BD18 /* KiwiMaru-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8863884063A0A0BE404A556C /* KiwiMaru-Medium.ttf */; };
+		A71F7C2E678D764BE35A57AB /* EnvelopeModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7BB1165B167E6A6D438B59E /* EnvelopeModels.swift */; };
+		B087298AC5A4EC688EDC8786 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0F21BE654AB3062A5BB0D5F9 /* Assets.xcassets */; };
 		F0F0A0021CF9000F00FC0001 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = F0F0A0011CF9000F00FC0001 /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
@@ -27,6 +33,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 97C146ED1CF9000F007C117D;
 			remoteInfo = Runner;
+		};
+		B0176721D9E8411C86B2698D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 13EE34F29CB41E367E24EF8E;
+			remoteInfo = FuutouWidget;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -44,8 +57,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		026973ED1C70C68CCF180A22 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		02BAA2CFB6DA8387891C01F1 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		07469FCF9E050C1F33C1A357 /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
+		0CCC897639577A8CA9115E03 /* AppIntent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppIntent.swift; sourceTree = "<group>"; };
+		0F21BE654AB3062A5BB0D5F9 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		135B48BF78E802A59E1CC10B /* FuutouWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FuutouWidget.swift; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
@@ -57,21 +74,35 @@
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7884E8672EC3CC0400C636F2 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		7A738546187DFEEE4218D414 /* FuutouWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FuutouWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
+		7B1FC91167EBB18832FDF55E /* FuutouWidget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = FuutouWidget.entitlements; sourceTree = "<group>"; };
+		8863884063A0A0BE404A556C /* KiwiMaru-Medium.ttf */ = {isa = PBXFileReference; includeInIndex = 1; path = "KiwiMaru-Medium.ttf"; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
+		975A5FDDF8F12AF3AE0DBB47 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		97C146FB1CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A4FB8A1B28E02EC204EDCEAC /* Runner.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		A52D9BA5BB3BA7FBE3AD5359 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		A6048F71FAE4A2B4BE2EC2D7 /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D7BB1165B167E6A6D438B59E /* EnvelopeModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EnvelopeModels.swift; sourceTree = "<group>"; };
 		E2B2406F1DF955D74CF0543F /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		F0F0A0011CF9000F00FC0001 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		0C6038048505F1F3B151B0B3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				47D6C9D92612518485414FDE /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		97C146EB1CF9000F007C117D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -91,12 +122,35 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1148B45570D5410C45DAEDD0 /* FuutouWidget */ = {
+			isa = PBXGroup;
+			children = (
+				135B48BF78E802A59E1CC10B /* FuutouWidget.swift */,
+				0CCC897639577A8CA9115E03 /* AppIntent.swift */,
+				D7BB1165B167E6A6D438B59E /* EnvelopeModels.swift */,
+				026973ED1C70C68CCF180A22 /* Info.plist */,
+				7B1FC91167EBB18832FDF55E /* FuutouWidget.entitlements */,
+				8863884063A0A0BE404A556C /* KiwiMaru-Medium.ttf */,
+				0F21BE654AB3062A5BB0D5F9 /* Assets.xcassets */,
+			);
+			name = FuutouWidget;
+			path = FuutouWidget;
+			sourceTree = "<group>";
+		};
 		331C8082294A63A400263BE5 /* RunnerTests */ = {
 			isa = PBXGroup;
 			children = (
 				331C807B294A618700263BE5 /* RunnerTests.swift */,
 			);
 			path = RunnerTests;
+			sourceTree = "<group>";
+		};
+		3E9072D343D7AAE46B71B814 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				975A5FDDF8F12AF3AE0DBB47 /* Foundation.framework */,
+			);
+			name = iOS;
 			sourceTree = "<group>";
 		};
 		87446571305EADC17FA4D218 /* Pods */ = {
@@ -133,6 +187,7 @@
 				331C8082294A63A400263BE5 /* RunnerTests */,
 				87446571305EADC17FA4D218 /* Pods */,
 				B4A013B7FE50A56A6FE00161 /* Frameworks */,
+				1148B45570D5410C45DAEDD0 /* FuutouWidget */,
 			);
 			sourceTree = "<group>";
 		};
@@ -141,6 +196,7 @@
 			children = (
 				97C146EE1CF9000F007C117D /* Runner.app */,
 				331C8081294A63A400263BE5 /* RunnerTests.xctest */,
+				7A738546187DFEEE4218D414 /* FuutouWidget.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -158,6 +214,7 @@
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				7884E8672EC3CC0400C636F2 /* SceneDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
+				A4FB8A1B28E02EC204EDCEAC /* Runner.entitlements */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -167,6 +224,7 @@
 			children = (
 				02BAA2CFB6DA8387891C01F1 /* Pods_Runner.framework */,
 				A6048F71FAE4A2B4BE2EC2D7 /* Pods_RunnerTests.framework */,
+				3E9072D343D7AAE46B71B814 /* iOS */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -174,6 +232,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		13EE34F29CB41E367E24EF8E /* FuutouWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DB8C05B1871ECC50575F5E92 /* Build configuration list for PBXNativeTarget "FuutouWidget" */;
+			buildPhases = (
+				9B8FA7510014BF11A384E1D3 /* Sources */,
+				0C6038048505F1F3B151B0B3 /* Frameworks */,
+				A63E22A5E78B266332EA85AE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FuutouWidget;
+			productName = FuutouWidget;
+			productReference = 7A738546187DFEEE4218D414 /* FuutouWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		331C8080294A63A400263BE5 /* RunnerTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 331C8087294A63A400263BE5 /* Build configuration list for PBXNativeTarget "RunnerTests" */;
@@ -206,10 +281,12 @@
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				F2542D447E4E5D7364BF98E9 /* [CP] Embed Pods Frameworks */,
 				6DF5B838EDD1932CC038A503 /* [CP] Copy Pods Resources */,
+				D3CC4439198B475CE7AE762F /* Embed FuutouWidget */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				CE92E64D982C0106CE4DA2DE /* PBXTargetDependency */,
 			);
 			name = Runner;
 			productName = Runner;
@@ -251,6 +328,7 @@
 			targets = (
 				97C146ED1CF9000F007C117D /* Runner */,
 				331C8080294A63A400263BE5 /* RunnerTests */,
+				13EE34F29CB41E367E24EF8E /* FuutouWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -272,6 +350,15 @@
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A63E22A5E78B266332EA85AE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B087298AC5A4EC688EDC8786 /* Assets.xcassets in Resources */,
+				A4029F9C5581A4983881BD18 /* KiwiMaru-Medium.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -348,6 +435,24 @@
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
 		};
+		D3CC4439198B475CE7AE762F /* Embed FuutouWidget */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Embed FuutouWidget";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\nAPPEX=\"${BUILT_PRODUCTS_DIR}/FuutouWidget.appex\"\nPLUGINS=\"${TARGET_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/PlugIns\"\nif [ ! -d \"$APPEX\" ]; then\n  echo \"error: FuutouWidget.appex not found at $APPEX\"\n  exit 1\nfi\nmkdir -p \"$PLUGINS\"\nrsync -a --delete \"${APPEX}/\" \"${PLUGINS}/FuutouWidget.appex/\"\n# Device / Archive builds need the appex re-signed after copy.\nif [ \"${PLATFORM_NAME}\" != \"iphonesimulator\" ] && [ -n \"${EXPANDED_CODE_SIGN_IDENTITY:-}\" ] && [ \"${EXPANDED_CODE_SIGN_IDENTITY}\" != \"-\" ]; then\n  /usr/bin/codesign --force --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" --entitlements \"${BUILT_PRODUCTS_DIR}/FuutouWidget.appex/FuutouWidget.appex-Simulated.xcent\" 2>/dev/null \\\n    || /usr/bin/codesign --force --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" --timestamp=none \"${PLUGINS}/FuutouWidget.appex\"\nfi\necho \"Embedded FuutouWidget.appex into PlugIns\"\n";
+		};
 		F2542D447E4E5D7364BF98E9 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -408,6 +513,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9B8FA7510014BF11A384E1D3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6A81A1E1EC882880C95C772A /* FuutouWidget.swift in Sources */,
+				1C2B9D1D7CC01C2570787C23 /* AppIntent.swift in Sources */,
+				A71F7C2E678D764BE35A57AB /* EnvelopeModels.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -415,6 +530,12 @@
 			isa = PBXTargetDependency;
 			target = 97C146ED1CF9000F007C117D /* Runner */;
 			targetProxy = 331C8085294A63A400263BE5 /* PBXContainerItemProxy */;
+		};
+		CE92E64D982C0106CE4DA2DE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FuutouWidget;
+			target = 13EE34F29CB41E367E24EF8E /* FuutouWidget */;
+			targetProxy = B0176721D9E8411C86B2698D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -497,6 +618,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = AJ24KB4M4W;
 				ENABLE_BITCODE = NO;
@@ -562,6 +684,39 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Runner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Runner";
 			};
 			name = Profile;
+		};
+		7C055E90045F19ECBF8F3A5C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = FuutouWidget/FuutouWidget.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = AJ24KB4M4W;
+				FLUTTER_BUILD_NAME = 1.1.2;
+				FLUTTER_BUILD_NUMBER = 5;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = FuutouWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = jp.fuutouchokin.app.FuutouWidget;
+				PRODUCT_NAME = FuutouWidget;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
 		};
 		97C147031CF9000F007C117D /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -682,6 +837,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = AJ24KB4M4W;
 				ENABLE_BITCODE = NO;
@@ -705,6 +861,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = AJ24KB4M4W;
 				ENABLE_BITCODE = NO;
@@ -718,6 +875,74 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		C890317BDB0C97A9204C1957 /* Profile */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = FuutouWidget/FuutouWidget.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = AJ24KB4M4W;
+				FLUTTER_BUILD_NAME = 1.1.2;
+				FLUTTER_BUILD_NUMBER = 5;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = FuutouWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = jp.fuutouchokin.app.FuutouWidget;
+				PRODUCT_NAME = FuutouWidget;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Profile;
+		};
+		CA5902C17690DE80C56C29F8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = FuutouWidget/FuutouWidget.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
+				DEVELOPMENT_TEAM = AJ24KB4M4W;
+				FLUTTER_BUILD_NAME = 1.1.2;
+				FLUTTER_BUILD_NUMBER = 5;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = FuutouWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = "$(FLUTTER_BUILD_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = jp.fuutouchokin.app.FuutouWidget;
+				PRODUCT_NAME = FuutouWidget;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
@@ -750,6 +975,16 @@
 				97C147061CF9000F007C117D /* Debug */,
 				97C147071CF9000F007C117D /* Release */,
 				249021D4217E4FDB00AE95B9 /* Profile */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DB8C05B1871ECC50575F5E92 /* Build configuration list for PBXNativeTarget "FuutouWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CA5902C17690DE80C56C29F8 /* Release */,
+				7C055E90045F19ECBF8F3A5C /* Debug */,
+				C890317BDB0C97A9204C1957 /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -8,6 +8,7 @@ import '../look/kraft_theme.dart';
 import 'envelope_editor_screen.dart';
 import 'payday_screen.dart';
 import 'spend_sheet.dart';
+import '../widget/deep_link_bus.dart';
 
 /// 封筒の一覧。タップでそのまま支出を記録する。
 class BoardScreen extends StatefulWidget {
@@ -19,11 +20,22 @@ class BoardScreen extends StatefulWidget {
 
 class _BoardScreenState extends State<BoardScreen> {
   bool _showcaseOpened = false;
+  bool _deepLinkWired = false;
+  DeepLinkBus? _deepLinks;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final show = AppScope.of(context).showcase;
+    final scope = AppScope.of(context);
+    if (!_deepLinkWired) {
+      _deepLinkWired = true;
+      _deepLinks = scope.deepLinks;
+      _deepLinks!.addListener(_onDeepLink);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _onDeepLink();
+      });
+    }
+    final show = scope.showcase;
     if (show != null && !_showcaseOpened) {
       _showcaseOpened = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -40,6 +52,22 @@ class _BoardScreenState extends State<BoardScreen> {
         }
       });
     }
+  }
+
+  @override
+  void dispose() {
+    _deepLinks?.removeListener(_onDeepLink);
+    super.dispose();
+  }
+
+  void _onDeepLink() {
+    if (!mounted) return;
+    final scope = AppScope.of(context);
+    final id = scope.deepLinks.takeEnvelopeId();
+    if (id == null) return;
+    if (scope.controller.needsSetup || !scope.controller.loaded) return;
+    if (scope.controller.ledger.byId(id) == null) return;
+    openSpendSheet(context, envelopeId: id);
   }
 
   @override

@@ -32,6 +32,7 @@ Future<void> openSpendSheet(
       premium: scope.premium,
       showcase: scope.showcase,
       rating: scope.rating,
+      deepLinks: scope.deepLinks,
       child: _SpendSheet(
         envelopeId: editing?.envelopeId ?? envelopeId,
         editing: editing,

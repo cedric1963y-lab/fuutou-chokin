@@ -1,14 +1,30 @@
 PODS:
   - app_tracking_transparency (0.0.1):
     - Flutter
+  - AppLovinSDK (13.6.4)
+  - FBAudienceNetwork (6.22.0)
   - Flutter (1.0.0)
+  - gma_mediation_applovin (2.6.5):
+    - Flutter
+    - GoogleMobileAdsMediationAppLovin (~> 13.6.4.0)
+  - gma_mediation_meta (1.7.1):
+    - Flutter
+    - GoogleMobileAdsMediationFacebook (~> 6.22.0.0)
   - Google-Mobile-Ads-SDK (13.10.0):
     - GoogleUserMessagingPlatform (>= 1.1)
   - google_mobile_ads (9.1.0):
     - Flutter
     - Google-Mobile-Ads-SDK (~> 13.7)
     - webview_flutter_wkwebview
+  - GoogleMobileAdsMediationAppLovin (13.6.4.0):
+    - AppLovinSDK (= 13.6.4)
+    - Google-Mobile-Ads-SDK (~> 13.3)
+  - GoogleMobileAdsMediationFacebook (6.22.0.0):
+    - FBAudienceNetwork (= 6.22.0)
+    - Google-Mobile-Ads-SDK (~> 13.3)
   - GoogleUserMessagingPlatform (3.1.0)
+  - home_widget (0.0.1):
+    - Flutter
   - in_app_purchase_storekit (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -28,7 +44,10 @@ PODS:
 DEPENDENCIES:
   - app_tracking_transparency (from `.symlinks/plugins/app_tracking_transparency/ios`)
   - Flutter (from `Flutter`)
+  - gma_mediation_applovin (from `.symlinks/plugins/gma_mediation_applovin/ios`)
+  - gma_mediation_meta (from `.symlinks/plugins/gma_mediation_meta/ios`)
   - google_mobile_ads (from `.symlinks/plugins/google_mobile_ads/ios`)
+  - home_widget (from `.symlinks/plugins/home_widget/ios`)
   - in_app_purchase_storekit (from `.symlinks/plugins/in_app_purchase_storekit/darwin`)
   - in_app_review (from `.symlinks/plugins/in_app_review/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
@@ -38,7 +57,11 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - AppLovinSDK
+    - FBAudienceNetwork
     - Google-Mobile-Ads-SDK
+    - GoogleMobileAdsMediationAppLovin
+    - GoogleMobileAdsMediationFacebook
     - GoogleUserMessagingPlatform
 
 EXTERNAL SOURCES:
@@ -46,8 +69,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/app_tracking_transparency/ios"
   Flutter:
     :path: Flutter
+  gma_mediation_applovin:
+    :path: ".symlinks/plugins/gma_mediation_applovin/ios"
+  gma_mediation_meta:
+    :path: ".symlinks/plugins/gma_mediation_meta/ios"
   google_mobile_ads:
     :path: ".symlinks/plugins/google_mobile_ads/ios"
+  home_widget:
+    :path: ".symlinks/plugins/home_widget/ios"
   in_app_purchase_storekit:
     :path: ".symlinks/plugins/in_app_purchase_storekit/darwin"
   in_app_review:
@@ -63,10 +92,17 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   app_tracking_transparency: e169b653478da7bb15a6c61209015378ca73e375
+  AppLovinSDK: 730be87bac90c5b0f7d507c3a2530213f7685370
+  FBAudienceNetwork: b05c65487114aa3bf3a68e865c60937a9fb03b69
   Flutter: 71a624a5bc0c04062bf19101d501e466baf2fb47
+  gma_mediation_applovin: 221d8d1fe9396ed5c4ff9773e572d5cb80ae50f3
+  gma_mediation_meta: a0029d1073218c094c8c7390e1f57d849d679ab9
   Google-Mobile-Ads-SDK: 8e764c4990ef82c2727fd32e0c4143817b443603
   google_mobile_ads: 8c61669fb8e2ba987b0b7116b5265ba647cdca0c
+  GoogleMobileAdsMediationAppLovin: bd2c7430ec7cc319f65139f18edcf48694d0bf81
+  GoogleMobileAdsMediationFacebook: 213c2a7cabd34f2e4115c3e7fa4780256043db42
   GoogleUserMessagingPlatform: befe603da6501006420c206222acd449bba45a9c
+  home_widget: 0434835a4c9a75704264feff6be17ea40e0f0d57
   in_app_purchase_storekit: 2342c0a5da86593124d08dd13d920f39a52b273a
   in_app_review: 436034b18594851a7328d7f1c2ed5ec235b79cfc
   share_plus: 796a4b55a883a34f4f1ff7bbd19436879a5055db

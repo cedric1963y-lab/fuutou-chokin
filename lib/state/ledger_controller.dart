@@ -7,6 +7,7 @@ import '../domain/ledger.dart';
 import '../domain/payday.dart';
 import '../domain/yen.dart';
 import '../persistence/ledger_repository.dart';
+import '../widget/home_widget_sync.dart';
 
 /// 画面から使う家計の状態。変更のたびに端末へ保存する。
 class LedgerController extends ChangeNotifier {
@@ -31,12 +32,21 @@ class LedgerController extends ChangeNotifier {
     _ledger = await _repo.read();
     _loaded = true;
     notifyListeners();
+    final l = _ledger;
+    if (l != null && l.setupDone) {
+      await HomeWidgetSync.publish(l);
+    } else {
+      await HomeWidgetSync.clear();
+    }
   }
 
   Future<void> _commit() async {
     notifyListeners();
     final l = _ledger;
-    if (l != null) await _repo.write(l);
+    if (l != null) {
+      await _repo.write(l);
+      await HomeWidgetSync.publish(l);
+    }
   }
 
   /// はじめての設定。今日以前で最も近い給料日から期を始める。
@@ -218,5 +228,6 @@ class LedgerController extends ChangeNotifier {
     await _repo.wipe();
     _ledger = null;
     notifyListeners();
+    await HomeWidgetSync.clear();
   }
 }

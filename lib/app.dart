@@ -9,6 +9,7 @@ import 'screens/home_shell.dart';
 import 'screens/welcome_screen.dart';
 import 'showcase.dart';
 import 'state/ledger_controller.dart';
+import 'widget/deep_link_bus.dart';
 
 /// 画面のどこからでも状態と広告に届くようにする。
 class AppScope extends InheritedWidget {
@@ -19,6 +20,7 @@ class AppScope extends InheritedWidget {
     required this.premium,
     this.showcase,
     this.rating = const RatingAsk(enabled: false),
+    required this.deepLinks,
     required super.child,
   });
 
@@ -27,30 +29,36 @@ class AppScope extends InheritedWidget {
   final PremiumStore premium;
   final Showcase? showcase;
   final RatingAsk rating;
+  final DeepLinkBus deepLinks;
 
   static AppScope of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<AppScope>()!;
 
   @override
   bool updateShouldNotify(AppScope old) =>
-      old.controller != controller || old.ads != ads || old.premium != premium;
+      old.controller != controller ||
+      old.ads != ads ||
+      old.premium != premium ||
+      old.deepLinks != deepLinks;
 }
 
 class FuutouApp extends StatelessWidget {
-  const FuutouApp({
+  FuutouApp({
     super.key,
     required this.controller,
     required this.ads,
     required this.premium,
     this.showcase,
     this.rating = const RatingAsk(enabled: false),
-  });
+    DeepLinkBus? deepLinks,
+  }) : deepLinks = deepLinks ?? DeepLinkBus();
 
   final LedgerController controller;
   final AdService ads;
   final PremiumStore premium;
   final Showcase? showcase;
   final RatingAsk rating;
+  final DeepLinkBus deepLinks;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +68,7 @@ class FuutouApp extends StatelessWidget {
       premium: premium,
       showcase: showcase,
       rating: rating,
+      deepLinks: deepLinks,
       child: MaterialApp(
         title: '封筒貯金',
         debugShowCheckedModeBanner: false,
