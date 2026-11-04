@@ -10,11 +10,6 @@
 		<string>pubads.g.doubleclick.net</string>
 		<string>securepubads.g.doubleclick.net</string>
 		<string>g.doubleclick.net</string>
-		<string>www.facebook.com</string>
-		<string>an.facebook.com</string>
-		<string>d.applovin.com</string>
-		<string>rt.applovin.com</string>
-		<string>ms.applovin.com</string>
 	</array>
 	<key>NSPrivacyCollectedDataTypes</key>
 	<array>

@@ -6,4 +6,4 @@
 - データ: Flutter `HomeWidgetSync.publish` → App Group `envelopes_json` → WidgetKit
 - ディープリンク: `fuutouchokin://envelope/<id>`（タップでその封筒の支出シート）
 - 課金: 無料（広告なし・プレミアムゲートなし）
-- Meta/AppLovin メディエーションは別途（このブランチの pubspec に依存はあるが、ウィジェット自体には広告なし）
+- このビルドに Meta / AppLovin メディエーションは含めない（別ブランチ `feature/mediation-applovin-meta`）
