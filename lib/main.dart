@@ -15,7 +15,7 @@ import 'state/ledger_controller.dart';
 import 'widget/deep_link_bus.dart';
 import 'widget/home_widget_sync.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   LicenseRegistry.addLicense(() async* {
     final text = await rootBundle.loadString('assets/licenses/KiwiMaru-OFL.txt');
@@ -27,6 +27,8 @@ void main() {
   const scene = String.fromEnvironment('SHOWCASE');
   if (!kReleaseMode && scene.isNotEmpty) {
     final show = Showcase.build(scene);
+    // ウィジェット用に App Group へ見本残高を書き込み、WidgetCenter を reload する。
+    await show.controller.load();
     runApp(FuutouApp(
       controller: show.controller,
       ads: AdService(enabled: false),
