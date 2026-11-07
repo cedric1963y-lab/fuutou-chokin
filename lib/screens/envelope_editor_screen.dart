@@ -28,6 +28,8 @@ class _EnvelopeEditorScreenState extends State<EnvelopeEditorScreen> {
       _scope = AppScope.of(context);
       _scoped = true;
       _scope.controller.addListener(_markChanged);
+      // 閉じたときに出す可能性があるので、ここで全画面広告を読み込んでおく
+      _scope.ads.prepareInterstitial();
     }
   }
 

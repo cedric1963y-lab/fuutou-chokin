@@ -27,7 +27,12 @@ class _PaydayScreenState extends State<PaydayScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final l = AppScope.of(context).controller.ledger;
+    final scope = AppScope.of(context);
+    final l = scope.controller.ledger;
+    if (_choices == null) {
+      // 締めのあとに出す可能性があるので、ここで全画面広告を読み込んでおく
+      scope.ads.prepareInterstitial();
+    }
     _choices ??= {...l.defaultChoices(), ...?widget.initialChoices};
   }
 
