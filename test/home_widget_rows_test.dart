@@ -33,7 +33,12 @@ void main() {
     final ledger = Ledger(
       envelopes: [food, savings],
       spends: [
-        Spend(id: 's1', envelopeId: 'food', amount: 1200, on: DateTime(2026, 10, 1)),
+        Spend(
+          id: 's1',
+          envelopeId: 'food',
+          amount: 1200,
+          on: DateTime(2026, 10, 1),
+        ),
       ],
       periodStart: DateTime(2026, 9, 25),
       rule: const PaydayRule(day: 25),
@@ -47,5 +52,37 @@ void main() {
     expect(rows.last['name'], '貯金');
     expect(rows.last['savings'], true);
     expect(rows.last['left'], 25000); // carried 5000 + budget 20000
+  });
+
+  test('追加を入れた残高がウィジェット行に出る', () {
+    final food = Envelope(id: 'food', name: '食費', budget: 32000);
+    final ledger = Ledger(
+      envelopes: [
+        food,
+        Envelope(id: 'savings', name: '貯金', budget: 20000, isSavings: true),
+      ],
+      spends: [
+        Spend(
+          id: 's1',
+          envelopeId: 'food',
+          amount: 1200,
+          on: DateTime(2026, 10, 1),
+        ),
+      ],
+      additions: [
+        Addition(
+          id: 'a1',
+          envelopeId: 'food',
+          amount: 3000,
+          on: DateTime(2026, 10, 2),
+        ),
+      ],
+      periodStart: DateTime(2026, 9, 25),
+      rule: const PaydayRule(day: 25),
+      history: const [],
+    );
+    final rows = rowsFor(ledger);
+    expect(rows.first['left'], 32000 + 3000 - 1200);
+    expect(rows.first['funded'], 35000);
   });
 }

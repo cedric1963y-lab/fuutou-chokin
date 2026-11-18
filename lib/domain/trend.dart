@@ -14,7 +14,7 @@ class PeriodBar {
   final DateTime end;
   final int spent;
 
-  /// その期間の予算（持ち越しは含めない）
+  /// その期間の予算（持ち越し・今期の追加は含めない）
   final int budget;
 
   /// 今の期間（まだ締めていない）
@@ -24,7 +24,11 @@ class PeriodBar {
 /// 期間ごとの支出の推移（古い順）。[envelopeName] が null なら貯金以外の合計。
 ///
 /// 締めた期間の記録は袋の名前で残っているので、名前で突き合わせる。
-List<PeriodBar> spendingTrend(Ledger l, {String? envelopeName, int maxPeriods = 12}) {
+List<PeriodBar> spendingTrend(
+  Ledger l, {
+  String? envelopeName,
+  int maxPeriods = 12,
+}) {
   final bars = <PeriodBar>[];
   for (final p in l.history.reversed) {
     var spent = 0;
@@ -35,7 +39,9 @@ List<PeriodBar> spendingTrend(Ledger l, {String? envelopeName, int maxPeriods = 
       spent += r.spent;
       budget += r.budget;
     }
-    bars.add(PeriodBar(start: p.start, end: p.end, spent: spent, budget: budget));
+    bars.add(
+      PeriodBar(start: p.start, end: p.end, spent: spent, budget: budget),
+    );
   }
   var spent = 0;
   var budget = 0;
@@ -44,13 +50,15 @@ List<PeriodBar> spendingTrend(Ledger l, {String? envelopeName, int maxPeriods = 
     spent += l.spentIn(e);
     budget += e.budget;
   }
-  bars.add(PeriodBar(
-    start: l.periodStart,
-    end: l.periodEnd,
-    spent: spent,
-    budget: budget,
-    current: true,
-  ));
+  bars.add(
+    PeriodBar(
+      start: l.periodStart,
+      end: l.periodEnd,
+      spent: spent,
+      budget: budget,
+      current: true,
+    ),
+  );
   if (bars.length > maxPeriods) {
     return bars.sublist(bars.length - maxPeriods);
   }

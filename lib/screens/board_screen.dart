@@ -43,12 +43,28 @@ class _BoardScreenState extends State<BoardScreen> {
         if (show.scene == 'spend') {
           final c = AppScope.of(context).controller;
           final food = c.ledger.envelopes.first;
-          openSpendSheet(context,
-              envelopeId: food.id, initialAmount: 1280, initialMemo: 'スーパー（夕飯）');
+          openSpendSheet(
+            context,
+            envelopeId: food.id,
+            initialAmount: 1280,
+            initialMemo: 'スーパー（夕飯）',
+          );
+        } else if (show.scene == 'addition') {
+          final c = AppScope.of(context).controller;
+          final food = c.ledger.envelopes.first;
+          openSpendSheet(
+            context,
+            envelopeId: food.id,
+            addition: true,
+            initialAmount: 3000,
+            initialMemo: '臨時収入',
+          );
         } else if (show.scene == 'payday') {
-          Navigator.of(context).push(MaterialPageRoute<void>(
-            builder: (_) => PaydayScreen(initialChoices: show.paydayChoices),
-          ));
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => PaydayScreen(initialChoices: show.paydayChoices),
+            ),
+          );
         }
       });
     }
@@ -89,26 +105,40 @@ class _BoardScreenState extends State<BoardScreen> {
                       padding: const EdgeInsets.fromLTRB(18, 10, 8, 4),
                       child: Row(
                         children: [
-                          const Text('封筒貯金',
-                              style: TextStyle(fontFamily: Kraft.display, fontSize: 26)),
+                          const Text(
+                            '封筒貯金',
+                            style: TextStyle(
+                              fontFamily: Kraft.display,
+                              fontSize: 26,
+                            ),
+                          ),
                           const Spacer(),
                           IconButton(
                             tooltip: '袋を編集',
                             onPressed: () => Navigator.of(context).push(
                               MaterialPageRoute<void>(
-                                  builder: (_) => const EnvelopeEditorScreen()),
+                                builder: (_) => const EnvelopeEditorScreen(),
+                              ),
                             ),
-                            icon: const Icon(Icons.edit_note, color: Kraft.ink, size: 28),
+                            icon: const Icon(
+                              Icons.edit_note,
+                              color: Kraft.ink,
+                              size: 28,
+                            ),
                           ),
                           const SizedBox(width: 4),
                           FilledButton.icon(
                             style: FilledButton.styleFrom(
                               backgroundColor: Kraft.bar,
                               minimumSize: const Size(0, 44),
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
                               shape: const StadiumBorder(),
                               textStyle: const TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.w800),
+                                fontSize: 15,
+                                fontWeight: FontWeight.w800,
+                              ),
                             ),
                             onPressed: () => openSpendSheet(context),
                             icon: const Icon(Icons.edit, size: 18),
@@ -119,13 +149,17 @@ class _BoardScreenState extends State<BoardScreen> {
                       ),
                     ),
                   ),
-                  SliverToBoxAdapter(child: _PaydayHeader(ledger: l, today: c.today)),
+                  SliverToBoxAdapter(
+                    child: _PaydayHeader(ledger: l, today: c.today),
+                  ),
                   if (c.paydayDue)
                     SliverToBoxAdapter(
                       child: _PaydayDueCard(
                         date: l.nextPayday,
                         onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute<void>(builder: (_) => const PaydayScreen()),
+                          MaterialPageRoute<void>(
+                            builder: (_) => const PaydayScreen(),
+                          ),
                         ),
                       ),
                     ),
@@ -133,12 +167,13 @@ class _BoardScreenState extends State<BoardScreen> {
                     padding: const EdgeInsets.fromLTRB(14, 8, 14, 24),
                     sliver: SliverGrid.builder(
                       itemCount: envs.length,
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 14,
-                        crossAxisSpacing: 14,
-                        childAspectRatio: 1.14,
-                      ),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 14,
+                            crossAxisSpacing: 14,
+                            childAspectRatio: 1.14,
+                          ),
                       itemBuilder: (context, i) {
                         final e = envs[i];
                         return EnvelopeCard(
@@ -149,11 +184,11 @@ class _BoardScreenState extends State<BoardScreen> {
                           funded: e.isSavings ? e.budget : l.fundedIn(e),
                           caption: e.isSavings
                               ? '毎月 ${yen(e.budget)} ずつ'
-                              : (e.carried != 0
-                                  ? '予算+繰越 ${yen(l.fundedIn(e))}'
-                                  : '予算 ${yen(e.budget)}'),
-                          onTap: () => openSpendSheet(context, envelopeId: e.id),
-                          onLongPress: () => showEnvelopeForm(context, envelope: e),
+                              : _fundedCaption(l, e),
+                          onTap: () =>
+                              openSpendSheet(context, envelopeId: e.id),
+                          onLongPress: () =>
+                              showEnvelopeForm(context, envelope: e),
                         );
                       },
                     ),
@@ -193,25 +228,50 @@ class _PaydayHeader extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                const Text('給料日まで ', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
-                Text(days <= 0 ? '今日' : 'あと$days日',
-                    style: const TextStyle(fontFamily: Kraft.display, fontSize: 26, height: 1)),
+                const Text(
+                  '給料日まで ',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                ),
+                Text(
+                  days <= 0 ? '今日' : 'あと$days日',
+                  style: const TextStyle(
+                    fontFamily: Kraft.display,
+                    fontSize: 26,
+                    height: 1,
+                  ),
+                ),
                 const Spacer(),
-                Text(mdW(ledger.nextPayday),
-                    style: const TextStyle(fontSize: 13, color: Kraft.inkSoft)),
+                Text(
+                  mdW(ledger.nextPayday),
+                  style: const TextStyle(fontSize: 13, color: Kraft.inkSoft),
+                ),
               ],
             ),
             const SizedBox(height: 10),
             Row(
               children: [
-                Expanded(child: _Stat(label: '使える残り', value: yen(left), strong: true)),
-                Expanded(child: _Stat(label: '1日あたり', value: days > 0 ? yen(perDay) : '—')),
-                Expanded(child: _Stat(label: '今期の支出', value: yen(ledger.spentThisPeriod))),
+                Expanded(
+                  child: _Stat(label: '使える残り', value: yen(left), strong: true),
+                ),
+                Expanded(
+                  child: _Stat(
+                    label: '1日あたり',
+                    value: days > 0 ? yen(perDay) : '—',
+                  ),
+                ),
+                Expanded(
+                  child: _Stat(
+                    label: '今期の支出',
+                    value: yen(ledger.spentThisPeriod),
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 4),
-            Text('今の期間 ${md(ledger.periodStart)}〜${md(ledger.periodEnd)}',
-                style: const TextStyle(fontSize: 11.5, color: Kraft.inkSoft)),
+            Text(
+              '今の期間 ${md(ledger.periodStart)}〜${md(ledger.periodEnd)}',
+              style: const TextStyle(fontSize: 11.5, color: Kraft.inkSoft),
+            ),
           ],
         ),
       ),
@@ -230,16 +290,21 @@ class _Stat extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontSize: 11.5, color: Kraft.inkSoft)),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 11.5, color: Kraft.inkSoft),
+        ),
         FittedBox(
           fit: BoxFit.scaleDown,
           alignment: Alignment.centerLeft,
-          child: Text(value,
-              style: TextStyle(
-                fontFamily: Kraft.display,
-                fontSize: strong ? 20 : 17,
-                color: strong ? Kraft.leaf : Kraft.ink,
-              )),
+          child: Text(
+            value,
+            style: TextStyle(
+              fontFamily: Kraft.display,
+              fontSize: strong ? 20 : 17,
+              color: strong ? Kraft.leaf : Kraft.ink,
+            ),
+          ),
         ),
       ],
     );
@@ -276,19 +341,31 @@ class _PaydayDueCard extends StatelessWidget {
                     border: Border.all(color: Kraft.stamp, width: 2),
                   ),
                   alignment: Alignment.center,
-                  child: const Text('給',
-                      style: TextStyle(
-                          fontFamily: Kraft.display, fontSize: 22, color: Kraft.stamp)),
+                  child: const Text(
+                    '給',
+                    style: TextStyle(
+                      fontFamily: Kraft.display,
+                      fontSize: 22,
+                      color: Kraft.stamp,
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('${mdW(date)}は給料日',
-                          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15)),
-                      const Text('袋の残りを繰り越すか、貯金へ移して新しい期間をはじめましょう',
-                          style: TextStyle(fontSize: 12.5, color: Kraft.inkSoft)),
+                      Text(
+                        '${mdW(date)}は給料日',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 15,
+                        ),
+                      ),
+                      const Text(
+                        '袋の残りを繰り越すか、貯金へ移して新しい期間をはじめましょう',
+                        style: TextStyle(fontSize: 12.5, color: Kraft.inkSoft),
+                      ),
                     ],
                   ),
                 ),
@@ -300,4 +377,13 @@ class _PaydayDueCard extends StatelessWidget {
       ),
     );
   }
+}
+
+String _fundedCaption(Ledger l, Envelope e) {
+  final added = l.addedIn(e);
+  final funded = l.fundedIn(e);
+  if (e.carried != 0 && added != 0) return '予算+繰越+追加 ${yen(funded)}';
+  if (added != 0) return '予算+追加 ${yen(funded)}';
+  if (e.carried != 0) return '予算+繰越 ${yen(funded)}';
+  return '予算 ${yen(e.budget)}';
 }

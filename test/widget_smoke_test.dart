@@ -11,10 +11,18 @@ import 'package:fuutou_chokin/state/ledger_controller.dart';
 
 void main() {
   testWidgets('はじめての設定から封筒の一覧まで', (tester) async {
-    final c = LedgerController(MemoryLedgerRepository(), clock: () => DateTime(2026, 10, 19));
+    final c = LedgerController(
+      MemoryLedgerRepository(),
+      clock: () => DateTime(2026, 10, 19),
+    );
     await c.load();
-    await tester.pumpWidget(FuutouApp(
-        controller: c, ads: AdService(enabled: false), premium: PremiumStore(enabled: false)));
+    await tester.pumpWidget(
+      FuutouApp(
+        controller: c,
+        ads: AdService(enabled: false),
+        premium: PremiumStore(enabled: false),
+      ),
+    );
     await tester.pumpAndSettle();
     expect(find.text('封筒貯金へようこそ'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('袋分けをはじめる'), 200);
@@ -26,11 +34,22 @@ void main() {
   });
 
   testWidgets('購入前はプレミアムの機能が案内になり、今ある画面はそのまま', (tester) async {
-    final c = LedgerController(MemoryLedgerRepository(), clock: () => DateTime(2026, 10, 19));
+    final c = LedgerController(
+      MemoryLedgerRepository(),
+      clock: () => DateTime(2026, 10, 19),
+    );
     await c.load();
-    await c.finishSetup(rule: const PaydayRule(day: 25), picks: starterEnvelopes.where((e) => e.onByDefault).toList());
-    await tester.pumpWidget(FuutouApp(
-        controller: c, ads: AdService(enabled: false), premium: PremiumStore(enabled: false)));
+    await c.finishSetup(
+      rule: const PaydayRule(day: 25),
+      picks: starterEnvelopes.where((e) => e.onByDefault).toList(),
+    );
+    await tester.pumpWidget(
+      FuutouApp(
+        controller: c,
+        ads: AdService(enabled: false),
+        premium: PremiumStore(enabled: false),
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text('貯金と履歴').last);
     await tester.pumpAndSettle();
@@ -40,18 +59,37 @@ void main() {
     await tester.tap(find.text('月ごとのグラフ'));
     await tester.pumpAndSettle();
     expect(find.text('封筒貯金 プレミアム'), findsOneWidget);
-    await tester.scrollUntilVisible(find.text('購入を復元'), 200,
-        scrollable: find.descendant(of: find.byType(PremiumScreen), matching: find.byType(Scrollable)).first);
+    await tester.scrollUntilVisible(
+      find.text('購入を復元'),
+      200,
+      scrollable: find
+          .descendant(
+            of: find.byType(PremiumScreen),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
     expect(find.text('購入を復元'), findsOneWidget);
   });
 
   testWidgets('購入済みなら目標とグラフが開ける', (tester) async {
-    final c = LedgerController(MemoryLedgerRepository(), clock: () => DateTime(2026, 10, 19));
+    final c = LedgerController(
+      MemoryLedgerRepository(),
+      clock: () => DateTime(2026, 10, 19),
+    );
     await c.load();
-    await c.finishSetup(rule: const PaydayRule(day: 25), picks: starterEnvelopes.where((e) => e.onByDefault).toList());
+    await c.finishSetup(
+      rule: const PaydayRule(day: 25),
+      picks: starterEnvelopes.where((e) => e.onByDefault).toList(),
+    );
     await c.addGoal(name: '旅行', target: 100000);
-    await tester.pumpWidget(FuutouApp(
-        controller: c, ads: AdService(enabled: false), premium: PremiumStore(enabled: false, unlocked: true)));
+    await tester.pumpWidget(
+      FuutouApp(
+        controller: c,
+        ads: AdService(enabled: false),
+        premium: PremiumStore(enabled: false, unlocked: true),
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text('貯金と履歴').last);
     await tester.pumpAndSettle();
@@ -60,5 +98,33 @@ void main() {
     await tester.tap(find.text('月ごとのグラフ'));
     await tester.pumpAndSettle();
     expect(find.text('使った金額（貯金以外の合計）'), findsOneWidget);
+  });
+
+  testWidgets('支出シートに追加の入口がある', (tester) async {
+    final c = LedgerController(
+      MemoryLedgerRepository(),
+      clock: () => DateTime(2026, 10, 19),
+    );
+    await c.load();
+    await c.finishSetup(
+      rule: const PaydayRule(day: 25),
+      picks: starterEnvelopes.where((e) => e.onByDefault).toList(),
+    );
+    await tester.pumpWidget(
+      FuutouApp(
+        controller: c,
+        ads: AdService(enabled: false),
+        premium: PremiumStore(enabled: false),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('支出を記録'));
+    await tester.pumpAndSettle();
+    expect(find.text('＋追加'), findsOneWidget);
+    expect(find.text('どの袋から出した？'), findsOneWidget);
+    await tester.tap(find.text('＋追加'));
+    await tester.pumpAndSettle();
+    expect(find.text('どの袋に足す？'), findsOneWidget);
+    expect(find.text('食費に足す'), findsOneWidget);
   });
 }

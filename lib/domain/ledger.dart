@@ -29,23 +29,26 @@ class Envelope {
   int carried;
 
   Map<String, Object> toJson() => {
-        'id': id,
-        'name': name,
-        'budget': budget,
-        'tint': tint.index,
-        'savings': isSavings,
-        'carried': carried,
-      };
+    'id': id,
+    'name': name,
+    'budget': budget,
+    'tint': tint.index,
+    'savings': isSavings,
+    'carried': carried,
+  };
 
   static Envelope fromJson(Map<String, dynamic> j) => Envelope(
-        id: j['id'] as String,
-        name: j['name'] as String,
-        budget: (j['budget'] as num).toInt(),
-        tint: EnvelopeTint.values[((j['tint'] as num?)?.toInt() ?? 0)
-            .clamp(0, EnvelopeTint.values.length - 1)],
-        isSavings: j['savings'] as bool? ?? false,
-        carried: (j['carried'] as num?)?.toInt() ?? 0,
-      );
+    id: j['id'] as String,
+    name: j['name'] as String,
+    budget: (j['budget'] as num).toInt(),
+    tint:
+        EnvelopeTint.values[((j['tint'] as num?)?.toInt() ?? 0).clamp(
+          0,
+          EnvelopeTint.values.length - 1,
+        )],
+    isSavings: j['savings'] as bool? ?? false,
+    carried: (j['carried'] as num?)?.toInt() ?? 0,
+  );
 }
 
 class Spend {
@@ -64,20 +67,53 @@ class Spend {
   String memo;
 
   Map<String, Object> toJson() => {
-        'id': id,
-        'env': envelopeId,
-        'amount': amount,
-        'on': on.toIso8601String(),
-        'memo': memo,
-      };
+    'id': id,
+    'env': envelopeId,
+    'amount': amount,
+    'on': on.toIso8601String(),
+    'memo': memo,
+  };
 
   static Spend fromJson(Map<String, dynamic> j) => Spend(
-        id: j['id'] as String,
-        envelopeId: j['env'] as String,
-        amount: (j['amount'] as num).toInt(),
-        on: DateTime.parse(j['on'] as String),
-        memo: j['memo'] as String? ?? '',
-      );
+    id: j['id'] as String,
+    envelopeId: j['env'] as String,
+    amount: (j['amount'] as num).toInt(),
+    on: DateTime.parse(j['on'] as String),
+    memo: j['memo'] as String? ?? '',
+  );
+}
+
+/// 今の期間に袋へ足した額（臨時収入など）。翌期間の予算には残さない。
+class Addition {
+  Addition({
+    required this.id,
+    required this.envelopeId,
+    required this.amount,
+    required this.on,
+    this.memo = '',
+  });
+
+  final String id;
+  String envelopeId;
+  int amount;
+  DateTime on;
+  String memo;
+
+  Map<String, Object> toJson() => {
+    'id': id,
+    'env': envelopeId,
+    'amount': amount,
+    'on': on.toIso8601String(),
+    'memo': memo,
+  };
+
+  static Addition fromJson(Map<String, dynamic> j) => Addition(
+    id: j['id'] as String,
+    envelopeId: j['env'] as String,
+    amount: (j['amount'] as num).toInt(),
+    on: DateTime.parse(j['on'] as String),
+    memo: j['memo'] as String? ?? '',
+  );
 }
 
 /// 給料日に袋の残りをどうするか。
@@ -103,6 +139,7 @@ class EnvelopeResult {
     required this.spent,
     required this.leftover,
     required this.action,
+    this.added = 0,
   });
 
   final String name;
@@ -114,29 +151,40 @@ class EnvelopeResult {
   final int leftover;
   final Leftover action;
 
+  /// この期間に足した臨時収入の合計（予算とは別）
+  final int added;
+
   Map<String, Object> toJson() => {
-        'name': name,
-        'tint': tint.index,
-        'savings': isSavings,
-        'budget': budget,
-        'in': carriedIn,
-        'spent': spent,
-        'left': leftover,
-        'action': action.index,
-      };
+    'name': name,
+    'tint': tint.index,
+    'savings': isSavings,
+    'budget': budget,
+    'in': carriedIn,
+    'spent': spent,
+    'left': leftover,
+    'action': action.index,
+    'added': added,
+  };
 
   static EnvelopeResult fromJson(Map<String, dynamic> j) => EnvelopeResult(
-        name: j['name'] as String,
-        tint: EnvelopeTint.values[(j['tint'] as num).toInt()
-            .clamp(0, EnvelopeTint.values.length - 1)],
-        isSavings: j['savings'] as bool? ?? false,
-        budget: (j['budget'] as num).toInt(),
-        carriedIn: (j['in'] as num).toInt(),
-        spent: (j['spent'] as num).toInt(),
-        leftover: (j['left'] as num).toInt(),
-        action: Leftover.values[(j['action'] as num).toInt()
-            .clamp(0, Leftover.values.length - 1)],
-      );
+    name: j['name'] as String,
+    tint:
+        EnvelopeTint.values[(j['tint'] as num).toInt().clamp(
+          0,
+          EnvelopeTint.values.length - 1,
+        )],
+    isSavings: j['savings'] as bool? ?? false,
+    budget: (j['budget'] as num).toInt(),
+    carriedIn: (j['in'] as num).toInt(),
+    spent: (j['spent'] as num).toInt(),
+    leftover: (j['left'] as num).toInt(),
+    action:
+        Leftover.values[(j['action'] as num).toInt().clamp(
+          0,
+          Leftover.values.length - 1,
+        )],
+    added: (j['added'] as num?)?.toInt() ?? 0,
+  );
 }
 
 class ClosedPeriod {
@@ -146,7 +194,8 @@ class ClosedPeriod {
     required this.results,
     required this.movedToSavings,
     required this.spends,
-  });
+    List<Addition>? additions,
+  }) : additions = additions ?? [];
 
   /// 期の初日（給料日）
   final DateTime start;
@@ -159,27 +208,34 @@ class ClosedPeriod {
   final int movedToSavings;
   final List<Spend> spends;
 
+  /// その期間に記録した臨時収入
+  final List<Addition> additions;
+
   int get totalSpent => results.fold(0, (s, r) => s + r.spent);
 
   Map<String, Object> toJson() => {
-        'start': start.toIso8601String(),
-        'end': end.toIso8601String(),
-        'results': results.map((r) => r.toJson()).toList(),
-        'moved': movedToSavings,
-        'spends': spends.map((s) => s.toJson()).toList(),
-      };
+    'start': start.toIso8601String(),
+    'end': end.toIso8601String(),
+    'results': results.map((r) => r.toJson()).toList(),
+    'moved': movedToSavings,
+    'spends': spends.map((s) => s.toJson()).toList(),
+    'additions': additions.map((a) => a.toJson()).toList(),
+  };
 
   static ClosedPeriod fromJson(Map<String, dynamic> j) => ClosedPeriod(
-        start: DateTime.parse(j['start'] as String),
-        end: DateTime.parse(j['end'] as String),
-        results: (j['results'] as List)
-            .map((e) => EnvelopeResult.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        movedToSavings: (j['moved'] as num?)?.toInt() ?? 0,
-        spends: ((j['spends'] as List?) ?? const [])
-            .map((e) => Spend.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      );
+    start: DateTime.parse(j['start'] as String),
+    end: DateTime.parse(j['end'] as String),
+    results: (j['results'] as List)
+        .map((e) => EnvelopeResult.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    movedToSavings: (j['moved'] as num?)?.toInt() ?? 0,
+    spends: ((j['spends'] as List?) ?? const [])
+        .map((e) => Spend.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    additions: ((j['additions'] as List?) ?? const [])
+        .map((e) => Addition.fromJson(e as Map<String, dynamic>))
+        .toList(),
+  );
 }
 
 /// 家計の封筒ぜんぶ。純粋なデータと計算だけ（保存や通知は持たない）。
@@ -192,12 +248,17 @@ class Ledger {
     required this.history,
     this.setupDone = true,
     List<SavingsGoal>? goals,
-  }) : goals = goals ?? [];
+    List<Addition>? additions,
+  }) : goals = goals ?? [],
+       additions = additions ?? [];
 
   final List<Envelope> envelopes;
 
   /// 今の期の支出
   final List<Spend> spends;
+
+  /// 今の期の臨時収入（期間を締めると履歴へ移し、今期分は空にする）
+  final List<Addition> additions;
   DateTime periodStart;
   PaydayRule rule;
 
@@ -221,8 +282,13 @@ class Ledger {
       .where((s) => s.envelopeId == e.id)
       .fold(0, (sum, s) => sum + s.amount);
 
-  /// 今期に袋へ入っている額（持ち越し＋予算）
-  int fundedIn(Envelope e) => e.carried + e.budget;
+  /// 今期にこの袋へ足した臨時収入の合計
+  int addedIn(Envelope e) => additions
+      .where((a) => a.envelopeId == e.id)
+      .fold(0, (sum, a) => sum + a.amount);
+
+  /// 今期に袋へ入っている額（持ち越し＋予算＋今期の追加）
+  int fundedIn(Envelope e) => e.carried + e.budget + addedIn(e);
 
   /// 袋に残っている額
   int balanceOf(Envelope e) => fundedIn(e) - spentIn(e);
@@ -245,19 +311,17 @@ class Ledger {
 
   DateTime get nextPayday => rule.nextAfter(periodStart);
 
-  DateTime get periodEnd =>
-      nextPayday.subtract(const Duration(days: 1));
+  DateTime get periodEnd => nextPayday.subtract(const Duration(days: 1));
 
-  bool isPaydayDue(DateTime today) =>
-      !nextPayday.isAfter(dateOnly(today));
+  bool isPaydayDue(DateTime today) => !nextPayday.isAfter(dateOnly(today));
 
   int daysUntilPayday(DateTime today) =>
       nextPayday.difference(dateOnly(today)).inDays;
 
   /// 残りの扱いの初期値。プラスは繰り越し、マイナスも繰り越し。
   Map<String, Leftover> defaultChoices() => {
-        for (final e in spendingEnvelopes) e.id: Leftover.carry,
-      };
+    for (final e in spendingEnvelopes) e.id: Leftover.carry,
+  };
 
   /// 選んだ扱いで、貯金へ移る額の合計。
   int movedBy(Map<String, Leftover> choices) {
@@ -291,29 +355,35 @@ class Ledger {
         case Leftover.clear:
           nextCarried[e.id] = 0;
       }
-      results.add(EnvelopeResult(
-        name: e.name,
-        tint: e.tint,
-        isSavings: false,
-        budget: e.budget,
-        carriedIn: e.carried,
-        spent: spentIn(e),
-        leftover: left,
-        action: action,
-      ));
+      results.add(
+        EnvelopeResult(
+          name: e.name,
+          tint: e.tint,
+          isSavings: false,
+          budget: e.budget,
+          carriedIn: e.carried,
+          spent: spentIn(e),
+          leftover: left,
+          action: action,
+          added: addedIn(e),
+        ),
+      );
     }
     final s = savings;
     final savingsLeft = balanceOf(s);
-    results.add(EnvelopeResult(
-      name: s.name,
-      tint: s.tint,
-      isSavings: true,
-      budget: s.budget,
-      carriedIn: s.carried,
-      spent: spentIn(s),
-      leftover: savingsLeft,
-      action: Leftover.carry,
-    ));
+    results.add(
+      EnvelopeResult(
+        name: s.name,
+        tint: s.tint,
+        isSavings: true,
+        budget: s.budget,
+        carriedIn: s.carried,
+        spent: spentIn(s),
+        leftover: savingsLeft,
+        action: Leftover.carry,
+        added: addedIn(s),
+      ),
+    );
     nextCarried[s.id] = savingsLeft + moved;
 
     var end = start.subtract(const Duration(days: 1));
@@ -324,26 +394,29 @@ class Ledger {
       results: results,
       movedToSavings: moved,
       spends: List.of(spends),
+      additions: List.of(additions),
     );
     history.insert(0, closed);
     for (final e in envelopes) {
       e.carried = nextCarried[e.id] ?? 0;
     }
     spends.clear();
+    additions.clear();
     periodStart = start;
     return closed;
   }
 
   Map<String, Object> toJson() => {
-        'v': 1,
-        'envelopes': envelopes.map((e) => e.toJson()).toList(),
-        'spends': spends.map((s) => s.toJson()).toList(),
-        'start': periodStart.toIso8601String(),
-        'rule': rule.toJson(),
-        'history': history.map((h) => h.toJson()).toList(),
-        'setup': setupDone,
-        'goals': goals.map((g) => g.toJson()).toList(),
-      };
+    'v': 1,
+    'envelopes': envelopes.map((e) => e.toJson()).toList(),
+    'spends': spends.map((s) => s.toJson()).toList(),
+    'additions': additions.map((a) => a.toJson()).toList(),
+    'start': periodStart.toIso8601String(),
+    'rule': rule.toJson(),
+    'history': history.map((h) => h.toJson()).toList(),
+    'setup': setupDone,
+    'goals': goals.map((g) => g.toJson()).toList(),
+  };
 
   static Ledger fromJson(Map<String, dynamic> j) {
     final ledger = Ledger(
@@ -352,6 +425,9 @@ class Ledger {
           .toList(),
       spends: (j['spends'] as List)
           .map((e) => Spend.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      additions: ((j['additions'] as List?) ?? const [])
+          .map((e) => Addition.fromJson(e as Map<String, dynamic>))
           .toList(),
       periodStart: DateTime.parse(j['start'] as String),
       rule: PaydayRule.fromJson(j['rule'] as Map<String, dynamic>?),
@@ -369,21 +445,28 @@ class Ledger {
 
   void ensureSavings() {
     if (!envelopes.any((e) => e.isSavings)) {
-      envelopes.add(Envelope(
-        id: 'savings',
-        name: '貯金',
-        budget: 0,
-        tint: EnvelopeTint.ivory,
-        isSavings: true,
-      ));
+      envelopes.add(
+        Envelope(
+          id: 'savings',
+          name: '貯金',
+          budget: 0,
+          tint: EnvelopeTint.ivory,
+          isSavings: true,
+        ),
+      );
     }
   }
 }
 
 /// はじめの袋の候補。
 class StarterEnvelope {
-  const StarterEnvelope(this.name, this.budget, this.tint,
-      {this.savings = false, this.onByDefault = true});
+  const StarterEnvelope(
+    this.name,
+    this.budget,
+    this.tint, {
+    this.savings = false,
+    this.onByDefault = true,
+  });
   final String name;
   final int budget;
   final EnvelopeTint tint;
@@ -405,6 +488,16 @@ const starterEnvelopes = <StarterEnvelope>[
 
 /// 袋を追加するときの名前の候補
 const envelopeNameIdeas = <String>[
-  '交通費', '医療費', '衣服', '美容', '子ども', '交際費', 'ペット', '趣味',
-  '予備費', 'プレゼント', '習い事', 'ガソリン',
+  '交通費',
+  '医療費',
+  '衣服',
+  '美容',
+  '子ども',
+  '交際費',
+  'ペット',
+  '趣味',
+  '予備費',
+  'プレゼント',
+  '習い事',
+  'ガソリン',
 ];
