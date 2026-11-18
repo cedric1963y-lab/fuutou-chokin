@@ -5,6 +5,8 @@ import '../app.dart';
 import '../domain/payday.dart';
 import '../domain/yen.dart';
 import '../look/kraft_theme.dart';
+import '../premium/premium_screen.dart';
+import '../premium/premium_store.dart';
 import 'envelope_editor_screen.dart';
 import 'payday_screen.dart';
 
@@ -35,7 +37,7 @@ class SettingsScreen extends StatelessWidget {
     final scope = AppScope.of(context);
     final c = scope.controller;
     return ListenableBuilder(
-      listenable: Listenable.merge([c, scope.ads]),
+      listenable: Listenable.merge([c, scope.ads, scope.premium]),
       builder: (context, _) {
         final l = c.ledger;
         return SafeArea(
@@ -81,6 +83,32 @@ class SettingsScreen extends StatelessWidget {
                       builder: (_) => const EnvelopeEditorScreen())),
                 ),
               ]),
+              _Group(title: 'プレミアム', children: [
+                ListTile(
+                  leading: Icon(scope.premium.unlocked ? Icons.verified : Icons.workspace_premium_outlined,
+                      color: scope.premium.unlocked ? Kraft.leaf : null),
+                  title: Text(scope.premium.unlocked ? 'プレミアムをご利用中' : 'プレミアム（買い切り）'),
+                  subtitle: const Text('貯金の目標・月ごとのグラフ・CSV書き出し・広告なし'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => openPremium(context),
+                ),
+                if (!scope.premium.unlocked)
+                  ListTile(
+                    leading: const Icon(Icons.restore),
+                    title: const Text('購入を復元'),
+                    subtitle: const Text('機種変更や再インストールのあとに'),
+                    onTap: scope.premium.busy
+                        ? null
+                        : () async {
+                            final messenger = ScaffoldMessenger.of(context);
+                            final r = await scope.premium.restore();
+                            final text = premiumResultText(r, restoring: true);
+                            if (text != null) {
+                              messenger.showSnackBar(SnackBar(content: Text(text)));
+                            }
+                          },
+                  ),
+              ]),
               _Group(title: 'このアプリについて', children: [
                 if (scope.ads.privacyOptionsRequired)
                   ListTile(
@@ -113,7 +141,7 @@ class SettingsScreen extends StatelessWidget {
                   onTap: () => showLicensePage(
                     context: context,
                     applicationName: '封筒貯金',
-                    applicationVersion: '1.0.0',
+                    applicationVersion: '1.1.0',
                   ),
                 ),
               ]),
@@ -147,9 +175,12 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ]),
               const SizedBox(height: 8),
-              const Center(
-                child: Text('封筒貯金 1.0.0・広告で無料提供しています',
-                    style: TextStyle(fontSize: 12, color: Kraft.inkSoft)),
+              Center(
+                child: Text(
+                    scope.premium.unlocked
+                        ? '封筒貯金 1.1.0・プレミアム'
+                        : '封筒貯金 1.1.0・広告つきで無料提供しています',
+                    style: const TextStyle(fontSize: 12, color: Kraft.inkSoft)),
               ),
             ],
           ),

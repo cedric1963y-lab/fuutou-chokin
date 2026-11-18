@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -18,6 +20,7 @@ class BannerStrip extends StatefulWidget {
 class _BannerStripState extends State<BannerStrip> {
   BannerAd? _ad;
   bool _loaded = false;
+  Timer? _retry;
 
   @override
   void initState() {
@@ -27,23 +30,22 @@ class _BannerStripState extends State<BannerStrip> {
   }
 
   void _maybeLoad() {
-    if (!widget.ads.ready || _ad != null) return;
+    if (!mounted || !widget.ads.ready || widget.ads.adFree || _ad != null) return;
     final ad = BannerAd(
       adUnitId: AdIds.banner,
       size: AdSize.banner,
       request: widget.ads.request(),
       listener: BannerAdListener(
-        onAdLoaded: (_) {
-          if (mounted) setState(() => _loaded = true);
+        onAdLoaded: (a) {
+          if (!mounted || !identical(a, _ad)) return;
+          setState(() => _loaded = true);
         },
         onAdFailedToLoad: (a, err) {
-          a.dispose();
-          if (mounted) {
-            setState(() {
-              _ad = null;
-              _loaded = false;
-            });
-          }
+          // 表示中の自動更新の失敗なら、そのまま次の更新を待つ。
+          // （表示中の広告を破棄すると、プラットフォームビューが
+          //   破棄済みの広告を探して落ちることがある）
+          if (identical(a, _ad) && _loaded) return;
+          _dropLater(a as BannerAd);
         },
       ),
     );
@@ -51,10 +53,31 @@ class _BannerStripState extends State<BannerStrip> {
     ad.load();
   }
 
+  /// まず画面から外し、そのフレームが終わってから破棄する。少し待って読み直す。
+  void _dropLater(BannerAd a) {
+    if (identical(a, _ad)) {
+      if (mounted) {
+        setState(() {
+          _ad = null;
+          _loaded = false;
+        });
+      } else {
+        _ad = null;
+      }
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) => a.dispose());
+    _retry?.cancel();
+    if (mounted) _retry = Timer(const Duration(seconds: 45), _maybeLoad);
+  }
+
   @override
   void dispose() {
+    _retry?.cancel();
     widget.ads.removeListener(_maybeLoad);
-    _ad?.dispose();
+    final ad = _ad;
+    _ad = null;
+    // AdWidget が木から外れたあと（次のフレーム）に破棄する
+    if (ad != null) WidgetsBinding.instance.addPostFrameCallback((_) => ad.dispose());
     super.dispose();
   }
 

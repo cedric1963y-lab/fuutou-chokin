@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import '../app.dart';
 import '../look/kraft_paper.dart';
 import '../monetization/banner_strip.dart';
+import '../premium/premium_screen.dart';
 import 'board_screen.dart';
 import 'history_screen.dart';
 import 'settings_screen.dart';
+import 'trend_screen.dart';
 
 class HomeShell extends StatefulWidget {
   const HomeShell({super.key});
@@ -24,6 +26,11 @@ class _HomeShellState extends State<HomeShell> {
       final show = AppScope.of(context).showcase;
       if (show != null) {
         if (show.startTab != _tab) setState(() => _tab = show.startTab);
+        if (show.scene == 'premium') {
+          Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const PremiumScreen()));
+        } else if (show.scene == 'trend') {
+          Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => const TrendScreen()));
+        }
       }
     });
   }
@@ -36,10 +43,12 @@ class _HomeShellState extends State<HomeShell> {
       body: KraftPaper(
         child: IndexedStack(index: _tab, children: pages),
       ),
-      bottomNavigationBar: Column(
+      bottomNavigationBar: ListenableBuilder(
+        listenable: scope.premium,
+        builder: (context, _) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (scope.showcase == null) BannerStrip(ads: scope.ads),
+          if (scope.showcase == null && !scope.premium.unlocked) BannerStrip(ads: scope.ads),
           NavigationBar(
             selectedIndex: _tab,
             height: 64,
@@ -63,6 +72,7 @@ class _HomeShellState extends State<HomeShell> {
             ],
           ),
         ],
+      ),
       ),
     );
   }

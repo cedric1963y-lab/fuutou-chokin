@@ -2,15 +2,17 @@ import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 
+import '../domain/goals.dart';
 import '../domain/ledger.dart';
 import '../domain/payday.dart';
 import '../domain/yen.dart';
 import '../persistence/ledger_repository.dart';
+import '../widget/home_widget_sync.dart';
 
 /// 画面から使う家計の状態。変更のたびに端末へ保存する。
 class LedgerController extends ChangeNotifier {
   LedgerController(this._repo, {DateTime Function()? clock})
-      : _clock = clock ?? DateTime.now;
+    : _clock = clock ?? DateTime.now;
 
   final LedgerRepository _repo;
   final DateTime Function() _clock;
@@ -30,12 +32,21 @@ class LedgerController extends ChangeNotifier {
     _ledger = await _repo.read();
     _loaded = true;
     notifyListeners();
+    final l = _ledger;
+    if (l != null && l.setupDone) {
+      await HomeWidgetSync.publish(l);
+    } else {
+      await HomeWidgetSync.clear();
+    }
   }
 
   Future<void> _commit() async {
     notifyListeners();
     final l = _ledger;
-    if (l != null) await _repo.write(l);
+    if (l != null) {
+      await _repo.write(l);
+      await HomeWidgetSync.publish(l);
+    }
   }
 
   /// はじめての設定。今日以前で最も近い給料日から期を始める。
@@ -46,13 +57,15 @@ class LedgerController extends ChangeNotifier {
     final envelopes = <Envelope>[];
     var i = 0;
     for (final p in picks) {
-      envelopes.add(Envelope(
-        id: p.savings ? 'savings' : 'e${i++}${_newId()}',
-        name: p.name,
-        budget: p.budget,
-        tint: p.tint,
-        isSavings: p.savings,
-      ));
+      envelopes.add(
+        Envelope(
+          id: p.savings ? 'savings' : 'e${i++}${_newId()}',
+          name: p.name,
+          budget: p.budget,
+          tint: p.tint,
+          isSavings: p.savings,
+        ),
+      );
     }
     final ledger = Ledger(
       envelopes: envelopes,
@@ -86,8 +99,13 @@ class LedgerController extends ChangeNotifier {
     return s;
   }
 
-  Future<void> updateSpend(Spend s,
-      {String? envelopeId, int? amount, DateTime? on, String? memo}) async {
+  Future<void> updateSpend(
+    Spend s, {
+    String? envelopeId,
+    int? amount,
+    DateTime? on,
+    String? memo,
+  }) async {
     if (envelopeId != null) s.envelopeId = envelopeId;
     if (amount != null) s.amount = amount;
     if (on != null) s.on = dateOnly(on);
@@ -118,11 +136,76 @@ class LedgerController extends ChangeNotifier {
     return list;
   }
 
+  // ---- 臨時収入（今期の追加） ----
+
+  Future<Addition> addAddition({
+    required String envelopeId,
+    required int amount,
+    DateTime? on,
+    String memo = '',
+  }) async {
+    final a = Addition(
+      id: _newId(),
+      envelopeId: envelopeId,
+      amount: amount,
+      on: dateOnly(on ?? today),
+      memo: memo.trim(),
+    );
+    ledger.additions.add(a);
+    await _commit();
+    return a;
+  }
+
+  Future<void> updateAddition(
+    Addition a, {
+    String? envelopeId,
+    int? amount,
+    DateTime? on,
+    String? memo,
+  }) async {
+    if (envelopeId != null) a.envelopeId = envelopeId;
+    if (amount != null) a.amount = amount;
+    if (on != null) a.on = dateOnly(on);
+    if (memo != null) a.memo = memo.trim();
+    await _commit();
+  }
+
+  Future<void> removeAddition(Addition a) async {
+    ledger.additions.removeWhere((x) => x.id == a.id);
+    await _commit();
+  }
+
+  Future<void> restoreAddition(Addition a) async {
+    if (ledger.additions.any((x) => x.id == a.id)) return;
+    ledger.additions.add(a);
+    await _commit();
+  }
+
+  /// 新しい順
+  List<Addition> additionsNewestFirst({String? envelopeId}) {
+    final list = ledger.additions
+        .where((a) => envelopeId == null || a.envelopeId == envelopeId)
+        .toList();
+    list.sort((a, b) {
+      final c = b.on.compareTo(a.on);
+      return c != 0 ? c : b.id.compareTo(a.id);
+    });
+    return list;
+  }
+
   // ---- 袋 ----
 
-  Future<Envelope> addEnvelope(
-      {required String name, required int budget, required EnvelopeTint tint}) async {
-    final e = Envelope(id: _newId(), name: name.trim(), budget: budget, tint: tint);
+  Future<Envelope> addEnvelope({
+    required String name,
+    required int budget,
+    required EnvelopeTint tint,
+  }) async {
+    final e = Envelope(
+      id: _newId(),
+      name: name.trim(),
+      budget: budget,
+      tint: tint,
+    );
     final savingsIndex = ledger.envelopes.indexWhere((x) => x.isSavings);
     if (savingsIndex >= 0) {
       ledger.envelopes.insert(savingsIndex, e);
@@ -133,8 +216,12 @@ class LedgerController extends ChangeNotifier {
     return e;
   }
 
-  Future<void> updateEnvelope(Envelope e,
-      {String? name, int? budget, EnvelopeTint? tint}) async {
+  Future<void> updateEnvelope(
+    Envelope e, {
+    String? name,
+    int? budget,
+    EnvelopeTint? tint,
+  }) async {
     if (name != null && name.trim().isNotEmpty) e.name = name.trim();
     if (budget != null) e.budget = budget;
     if (tint != null) e.tint = tint;
@@ -145,6 +232,7 @@ class LedgerController extends ChangeNotifier {
     if (e.isSavings) return;
     ledger.envelopes.removeWhere((x) => x.id == e.id);
     ledger.spends.removeWhere((s) => s.envelopeId == e.id);
+    ledger.additions.removeWhere((a) => a.envelopeId == e.id);
     await _commit();
   }
 
@@ -176,16 +264,64 @@ class LedgerController extends ChangeNotifier {
     return ledger.rule.latestOnOrBefore(today);
   }
 
-  Future<ClosedPeriod> closePeriod(Map<String, Leftover> choices,
-      {bool early = false}) async {
+  Future<ClosedPeriod> closePeriod(
+    Map<String, Leftover> choices, {
+    bool early = false,
+  }) async {
     final closed = ledger.closePeriod(choices, nextPeriodStart(early: early));
     await _commit();
     return closed;
+  }
+
+  // ---- 貯金の目標（プレミアム） ----
+
+  List<GoalProgress> get goalProgress =>
+      fillGoals(ledger.goals, ledger.totalSaved);
+
+  Future<SavingsGoal> addGoal({
+    required String name,
+    required int target,
+    String memo = '',
+  }) async {
+    final g = SavingsGoal(
+      id: 'g${_newId()}',
+      name: name.trim(),
+      target: target,
+      memo: memo.trim(),
+    );
+    ledger.goals.add(g);
+    await _commit();
+    return g;
+  }
+
+  Future<void> updateGoal(
+    SavingsGoal g, {
+    String? name,
+    int? target,
+    String? memo,
+  }) async {
+    if (name != null && name.trim().isNotEmpty) g.name = name.trim();
+    if (target != null) g.target = target;
+    if (memo != null) g.memo = memo.trim();
+    await _commit();
+  }
+
+  Future<void> removeGoal(SavingsGoal g) async {
+    ledger.goals.removeWhere((x) => x.id == g.id);
+    await _commit();
+  }
+
+  Future<void> moveGoal(int oldIndex, int newIndex) async {
+    final list = ledger.goals;
+    final g = list.removeAt(oldIndex);
+    list.insert(newIndex.clamp(0, list.length), g);
+    await _commit();
   }
 
   Future<void> wipeAll() async {
     await _repo.wipe();
     _ledger = null;
     notifyListeners();
+    await HomeWidgetSync.clear();
   }
 }

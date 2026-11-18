@@ -28,6 +28,8 @@ class _EnvelopeEditorScreenState extends State<EnvelopeEditorScreen> {
       _scope = AppScope.of(context);
       _scoped = true;
       _scope.controller.addListener(_markChanged);
+      // 閉じたときに出す可能性があるので、ここで全画面広告を読み込んでおく
+      _scope.ads.prepareInterstitial();
     }
   }
 
@@ -38,7 +40,10 @@ class _EnvelopeEditorScreenState extends State<EnvelopeEditorScreen> {
     _scope.controller.removeListener(_markChanged);
     if (_changed) {
       // 画面を閉じたあと（支出の入力中ではない）にだけ要求する
-      Future<void>.delayed(const Duration(milliseconds: 350), _scope.ads.maybeShowInterstitial);
+      Future<void>.delayed(
+        const Duration(milliseconds: 350),
+        _scope.ads.maybeShowInterstitial,
+      );
     }
     super.dispose();
   }
@@ -54,7 +59,10 @@ class _EnvelopeEditorScreenState extends State<EnvelopeEditorScreen> {
         foregroundColor: Colors.white,
         onPressed: () => showEnvelopeForm(context),
         icon: const Icon(Icons.add),
-        label: const Text('袋を追加', style: TextStyle(fontWeight: FontWeight.w800)),
+        label: const Text(
+          '袋を追加',
+          style: TextStyle(fontWeight: FontWeight.w800),
+        ),
       ),
       body: KraftPaper(
         child: ListenableBuilder(
@@ -69,11 +77,21 @@ class _EnvelopeEditorScreenState extends State<EnvelopeEditorScreen> {
                   child: Row(
                     children: [
                       const Expanded(
-                        child: Text('長押しで並び替え。タップで名前・予算・色を変えられます。',
-                            style: TextStyle(fontSize: 12.5, color: Kraft.inkSoft)),
+                        child: Text(
+                          '長押しで並び替え。タップで名前・予算・色を変えられます。',
+                          style: TextStyle(
+                            fontSize: 12.5,
+                            color: Kraft.inkSoft,
+                          ),
+                        ),
                       ),
-                      Text('毎月 ${yen(monthly)}',
-                          style: const TextStyle(fontFamily: Kraft.display, fontSize: 17)),
+                      Text(
+                        '毎月 ${yen(monthly)}',
+                        style: const TextStyle(
+                          fontFamily: Kraft.display,
+                          fontSize: 17,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -88,12 +106,22 @@ class _EnvelopeEditorScreenState extends State<EnvelopeEditorScreen> {
                         key: ValueKey(e.id),
                         margin: const EdgeInsets.only(bottom: 8),
                         child: ListTile(
-                          leading: MiniEnvelope(tint: e.tint, size: 36, savings: e.isSavings),
-                          title: Text(e.name, style: const TextStyle(fontWeight: FontWeight.w800)),
-                          subtitle: Text(e.isSavings
-                              ? '貯金の袋・毎月 ${yen(e.budget)}'
-                              : '予算 ${yen(e.budget)}'
-                                  '${e.carried != 0 ? '・繰越 ${yen(e.carried, sign: true)}' : ''}'),
+                          leading: MiniEnvelope(
+                            tint: e.tint,
+                            size: 36,
+                            savings: e.isSavings,
+                          ),
+                          title: Text(
+                            e.name,
+                            style: const TextStyle(fontWeight: FontWeight.w800),
+                          ),
+                          subtitle: Text(
+                            e.isSavings
+                                ? '貯金の袋・毎月 ${yen(e.budget)}'
+                                : '予算 ${yen(e.budget)}'
+                                      '${e.carried != 0 ? '・繰越 ${yen(e.carried, sign: true)}' : ''}'
+                                      '${l.addedIn(e) != 0 ? '・今期の追加 ${yen(l.addedIn(e), sign: true)}' : ''}',
+                          ),
                           trailing: const Icon(Icons.drag_handle),
                           onTap: () => showEnvelopeForm(context, envelope: e),
                         ),
@@ -176,12 +204,16 @@ class _EnvelopeFormState extends State<_EnvelopeForm> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text('「${e.name}」を消しますか？'),
-        content: const Text('この袋と、今の期間のこの袋の支出の記録が消えます。締めた期間の履歴は残ります。'),
+        content: const Text('この袋と、今の期間のこの袋の支出・追加の記録が消えます。締めた期間の履歴は残ります。'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('やめる')),
           TextButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: const Text('消す', style: TextStyle(color: Kraft.stamp))),
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('やめる'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('消す', style: TextStyle(color: Kraft.stamp)),
+          ),
         ],
       ),
     );
@@ -196,7 +228,9 @@ class _EnvelopeFormState extends State<_EnvelopeForm> {
     final e = widget.envelope;
     final isNew = e == null;
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
       child: SafeArea(
         top: false,
         child: SingleChildScrollView(
@@ -207,14 +241,25 @@ class _EnvelopeFormState extends State<_EnvelopeForm> {
             children: [
               Row(
                 children: [
-                  Text(isNew ? '袋を追加' : '袋を編集',
-                      style: const TextStyle(fontFamily: Kraft.display, fontSize: 20)),
+                  Text(
+                    isNew ? '袋を追加' : '袋を編集',
+                    style: const TextStyle(
+                      fontFamily: Kraft.display,
+                      fontSize: 20,
+                    ),
+                  ),
                   const Spacer(),
                   if (!isNew && !e.isSavings)
                     TextButton.icon(
                       onPressed: _delete,
-                      icon: const Icon(Icons.delete_outline, color: Kraft.stamp),
-                      label: const Text('消す', style: TextStyle(color: Kraft.stamp)),
+                      icon: const Icon(
+                        Icons.delete_outline,
+                        color: Kraft.stamp,
+                      ),
+                      label: const Text(
+                        '消す',
+                        style: TextStyle(color: Kraft.stamp),
+                      ),
                     ),
                 ],
               ),
@@ -267,20 +312,28 @@ class _EnvelopeFormState extends State<_EnvelopeForm> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
-                                color: t == _tint ? Kraft.ink : Colors.transparent,
+                                color: t == _tint
+                                    ? Kraft.ink
+                                    : Colors.transparent,
                                 width: 2,
                               ),
                             ),
                             child: MiniEnvelope(tint: t, size: 40),
                           ),
-                          Text(Kraft.tintName(t), style: const TextStyle(fontSize: 11)),
+                          Text(
+                            Kraft.tintName(t),
+                            style: const TextStyle(fontSize: 11),
+                          ),
                         ],
                       ),
                     ),
                 ],
               ),
               const SizedBox(height: 18),
-              FilledButton(onPressed: _save, child: Text(isNew ? '追加する' : '保存する')),
+              FilledButton(
+                onPressed: _save,
+                child: Text(isNew ? '追加する' : '保存する'),
+              ),
             ],
           ),
         ),
