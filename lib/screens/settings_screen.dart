@@ -141,7 +141,7 @@ class SettingsScreen extends StatelessWidget {
                   onTap: () => showLicensePage(
                     context: context,
                     applicationName: '封筒貯金',
-                    applicationVersion: '1.1.0',
+                    applicationVersion: '1.1.5',
                   ),
                 ),
               ]),
@@ -178,8 +178,8 @@ class SettingsScreen extends StatelessWidget {
               Center(
                 child: Text(
                     scope.premium.unlocked
-                        ? '封筒貯金 1.1.0・プレミアム'
-                        : '封筒貯金 1.1.0・広告つきで無料提供しています',
+                        ? '封筒貯金 1.1.5・プレミアム'
+                        : '封筒貯金 1.1.5・広告つきで無料提供しています',
                     style: const TextStyle(fontSize: 12, color: Kraft.inkSoft)),
               ),
             ],

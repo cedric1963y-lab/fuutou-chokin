@@ -21,7 +21,7 @@ class RatingAsk {
   /// テスト・撮影モードでは false（何も保存せず、何も出さない）
   final bool enabled;
 
-  static const version = '1.1.4';
+  static const version = '1.1.5';
   static const minLaunches = 3;
   static const minSpends = 10;
   static const minSpendDays = 3;
