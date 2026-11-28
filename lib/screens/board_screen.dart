@@ -5,6 +5,7 @@ import '../domain/ledger.dart';
 import '../domain/yen.dart';
 import '../look/envelope_card.dart';
 import '../look/kraft_theme.dart';
+import '../premium/premium_nudge.dart';
 import 'envelope_editor_screen.dart';
 import 'payday_screen.dart';
 import 'spend_sheet.dart';
@@ -152,6 +153,7 @@ class _BoardScreenState extends State<BoardScreen> {
                   SliverToBoxAdapter(
                     child: _PaydayHeader(ledger: l, today: c.today),
                   ),
+                  const SliverToBoxAdapter(child: PremiumNudge()),
                   if (c.paydayDue)
                     SliverToBoxAdapter(
                       child: _PaydayDueCard(
